@@ -1,0 +1,33 @@
+{
+  "profile_version": "set1-v1.7",
+  "permanent_routes": {
+    "set1-app-orchestrator": "openai/gpt-5.6-sol",
+    "s1-repo-explorer": "opencode/north-mini-code-free",
+    "s1-product-planner": "openai/gpt-5.5",
+    "s1-ui-ux": "google/gemini-3.6-flash",
+    "s1-app-implementer": "opencode/mimo-v2.5-free",
+    "s1-data-api": "opencode/mimo-v2.5-free",
+    "s1-tester": "opencode/mimo-v2.5-free",
+    "s1-debugger": "opencode/deepseek-v4-flash-free",
+    "s1-reviewer": "opencode/deepseek-v4-flash-free",
+    "s1-security": "opencode/nemotron-3-ultra-free",
+    "s1-readiness-auditor": "opencode/nemotron-3-ultra-free",
+    "s1-release": "opencode/north-mini-code-free"
+  },
+  "routing_rules": {
+    "exact_ids_only": true,
+    "verified_models_only": true,
+    "automatic_fallback": false,
+    "automatic_paid_escalation": false,
+    "premium_retry_limit_per_unresolved_issue": 1,
+    "permanent_change_requires_human_approval": true,
+    "maximum_concurrent_specialists": 2,
+    "subagents_may_delegate": false
+  },
+  "inactive_optional_route": {
+    "model": "tokenrouter/moonshotai/kimi-k3-free",
+    "role": "creative_ui_reviewer",
+    "status": "DISABLED_QUOTA_EXHAUSTED"
+  },
+  "denied": ["Kimi automatic use", "Kimi substitution", "OpenRouter Kimi substitution", "Grok/xAI", "audio/voice", "unapproved model substitution"]
+}

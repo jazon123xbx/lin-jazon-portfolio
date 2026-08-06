@@ -1,0 +1,21 @@
+{
+  "profile_version": "set1-v1.7",
+  "repository": "lin-jazon-portfolio",
+  "runtime": {
+    "name": "OpenCode",
+    "version": "1.18.14",
+    "configuration_file": "opencode.jsonc",
+    "permission_generation": "object-style"
+  },
+  "compatibility_probes": {
+    "configuration": "PASS",
+    "multi_agent_delegation": "PASS_PREVIOUS_PROBE",
+    "exact_model_pinning": "PASS_PREVIOUS_PROBE",
+    "session_resume": "PASS_PREVIOUS_PROBE"
+  },
+  "evidence_basis": [
+    "user-confirmed post-remediation results",
+    ".opencode/package.json pins @opencode-ai/plugin 1.18.14"
+  ],
+  "secrets_recorded": false
+}

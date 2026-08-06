@@ -1,0 +1,14 @@
+{
+  "profile_version": "set1-v1.7",
+  "date": "2026-08-06",
+  "checks": {
+    "github_authentication": "PASS_PREVIOUS_POST_REMEDIATION_CHECK",
+    "github_repository_visibility": "PASS_PREVIOUS_POST_REMEDIATION_CHECK",
+    "github_read_only": "PASS_PREVIOUS_POST_REMEDIATION_CHECK",
+    "elevenlabs_disabled": "PASS",
+    "canva": "NOT_PROBED_THIS_STEP",
+    "semgrep": "NOT_PROBED_THIS_STEP",
+    "sequential_thinking": "NOT_PROBED_THIS_STEP"
+  },
+  "credential_values_recorded": false
+}

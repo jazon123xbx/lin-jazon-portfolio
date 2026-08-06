@@ -1,0 +1,25 @@
+{
+  "profile_version": "set1-v1.7",
+  "errors": [
+    {
+      "code": "HUMAN_APPROVAL_REQUIRED",
+      "meaning": "The next action crosses an approval boundary.",
+      "retry": "Only after explicit approval."
+    },
+    {
+      "code": "MODEL_ROUTE_UNAVAILABLE",
+      "meaning": "The pinned model cannot be used.",
+      "retry": "Stop for a human routing decision; do not substitute automatically."
+    },
+    {
+      "code": "MCP_POLICY_DENIED",
+      "meaning": "The requested MCP action is outside the approved profile.",
+      "retry": "Use a safe local fallback or request approval where policy permits."
+    },
+    {
+      "code": "VALIDATION_FAILED",
+      "meaning": "Deterministic configuration or application validation failed.",
+      "retry": "Route evidence to the debugger, correct the root cause, and rerun once."
+    }
+  ]
+}

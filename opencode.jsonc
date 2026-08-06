@@ -1,0 +1,146 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // Set 1 v1.7 uses one primary orchestrator and exact, verified model IDs.
+  "model": "openai/gpt-5.6-sol",
+  "small_model": "opencode/north-mini-code-free",
+  "default_agent": "set1-app-orchestrator",
+  "subagent_depth": 1,
+
+  // Sessions and provider changes must remain deliberate and reviewable.
+  "share": "disabled",
+  "autoupdate": "notify",
+  "snapshot": true,
+  "skills": {
+    "paths": [".opencode/skills"]
+  },
+
+  // Audio/voice providers remain disabled. Kimi is not assigned or enabled.
+  "disabled_providers": ["xai", "elevenlabs"],
+  "mcp": {
+    "ElevenLabs": { "enabled": false },
+    "elevenlabs": { "enabled": false }
+  },
+
+  "permission": {
+    "read": {
+      "*": "allow",
+      ".env": "deny",
+      ".env.*": "deny",
+      "**/.env": "deny",
+      "**/.env.*": "deny",
+      "**/*secret*": "deny",
+      "**/*credential*": "deny",
+      "**/*.pem": "deny",
+      "**/*.key": "deny"
+    },
+    "edit": {
+      "*": "ask",
+      ".opencode/node_modules/**": "deny",
+      ".env": "deny",
+      ".env.*": "deny",
+      "**/.env": "deny",
+      "**/.env.*": "deny",
+      "**/*secret*": "deny",
+      "**/*credential*": "deny",
+      "**/*.pem": "deny",
+      "**/*.key": "deny"
+    },
+    "apply_patch": {
+      "*": "ask",
+      ".opencode/node_modules/**": "deny",
+      "**/.env*": "deny",
+      "**/*secret*": "deny",
+      "**/*credential*": "deny"
+    },
+    "external_directory": {
+      "*": "ask",
+      "~/.ssh/**": "deny",
+      "~/.aws/**": "deny",
+      "~/.config/gcloud/**": "deny"
+    },
+    "bash": {
+      "*": "ask",
+
+      // Safe repository inspection is available without a write grant.
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "git show*": "allow",
+      "git branch --show-current*": "allow",
+      "git branch --list*": "allow",
+      "git rev-parse*": "allow",
+
+      // Installs, migrations, deployments, and Git writes always stop for approval.
+      "npm install*": "ask",
+      "npm i *": "ask",
+      "pnpm add*": "ask",
+      "yarn add*": "ask",
+      "bun add*": "ask",
+      "* migrate*": "ask",
+      "* deploy*": "ask",
+      "git add*": "ask",
+      "git switch*": "ask",
+      "git checkout*": "ask",
+      "git branch -c*": "ask",
+      "git branch -m*": "ask",
+      "git branch -d*": "ask",
+      "git branch -D*": "ask",
+      "git commit*": "ask",
+      "git merge*": "ask",
+      "git rebase*": "ask",
+      "git push*": "ask",
+      "git tag*": "ask",
+      "gh pr *": "ask",
+      "gh release *": "ask",
+
+      // Destructive operations are denied rather than approval-gated.
+      "git reset*": "deny",
+      "git clean*": "deny",
+      "git checkout --*": "deny",
+      "git restore*": "deny",
+      "git push --force*": "deny",
+      "git push -f*": "deny",
+      "rm *": "deny",
+      "rmdir *": "deny",
+      "del *": "deny",
+      "Remove-Item *": "deny"
+    },
+    "task": "deny",
+    "webfetch": "ask",
+    "websearch": "ask",
+
+    // MCP tools default to denial or approval. GitHub write tools are never enabled.
+    "github_*": "deny",
+    "github_get_*": "allow",
+    "github_list_*": "allow",
+    "github_search_*": "allow",
+    "github_issue_read": "allow",
+    "github_pull_request_read": "allow",
+    "canva_*": "deny",
+    "elevenlabs_*": "deny",
+    "audio_*": "deny",
+    "voice_*": "deny"
+  },
+
+  // Provider policy prevents accidental use of inactive or prohibited routes.
+  "experimental": {
+    "policies": [
+      { "action": "provider.use", "effect": "deny", "resource": "tokenrouter/moonshotai/kimi-k3-free" },
+      { "action": "provider.use", "effect": "deny", "resource": "xai/*" },
+      { "action": "provider.use", "effect": "deny", "resource": "openrouter/x-ai/*" },
+      { "action": "provider.use", "effect": "deny", "resource": "openrouter/~x-ai/*" },
+      { "action": "provider.use", "effect": "deny", "resource": "*grok*" }
+    ],
+    "mcp_timeout": 30000
+  },
+  "tool_output": {
+    "max_lines": 1000,
+    "max_bytes": 32768
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "tail_turns": 4
+  }
+}

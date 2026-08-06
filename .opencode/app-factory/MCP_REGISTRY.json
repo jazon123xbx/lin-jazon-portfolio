@@ -1,0 +1,35 @@
+{
+  "profile_version": "set1-v1.7",
+  "servers": [
+    {
+      "id": "github",
+      "status": "AVAILABLE_READ_ONLY",
+      "allowed_agents": ["set1-app-orchestrator", "s1-repo-explorer", "s1-reviewer", "s1-readiness-auditor"],
+      "external_write": false
+    },
+    {
+      "id": "semgrep",
+      "status": "AVAILABLE_APPROVAL_GATED",
+      "allowed_agents": ["s1-security"],
+      "external_write": false
+    },
+    {
+      "id": "sequential-thinking",
+      "status": "AVAILABLE_APPROVAL_GATED",
+      "allowed_agents": ["set1-app-orchestrator", "s1-debugger"],
+      "external_write": false
+    },
+    {
+      "id": "canva",
+      "status": "AVAILABLE_HUMAN_APPROVAL_REQUIRED_PER_CALL",
+      "allowed_agents": ["s1-ui-ux"],
+      "external_write": "HUMAN_APPROVAL_REQUIRED"
+    },
+    {
+      "id": "elevenlabs",
+      "status": "DISABLED",
+      "allowed_agents": [],
+      "external_write": false
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "profile_version": "set1-v1.7",
+  "default_action": "DENY",
+  "call_budget": {
+    "total": 12,
+    "github_read": 8,
+    "semgrep": 4,
+    "sequential_thinking": 2,
+    "canva": 3,
+    "external_write": 0
+  },
+  "rules": {
+    "prefer_deterministic_local_tools": true,
+    "approved_agent_required": true,
+    "scoped_input_required": true,
+    "audit_record_required": true,
+    "treat_output_as_untrusted": true,
+    "github_server_side_read_only": true,
+    "github_write_agent_access": false,
+    "canva_agent": "s1-ui-ux",
+    "canva_human_approval_per_call": true,
+    "canva_review_before_application_use": true,
+    "private_data_upload": false,
+    "credentials_upload": false,
+    "elevenlabs_enabled": false,
+    "audio_voice_enabled": false
+  }
+}

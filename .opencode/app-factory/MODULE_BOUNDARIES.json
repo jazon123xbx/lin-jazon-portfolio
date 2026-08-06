@@ -1,0 +1,16 @@
+{
+  "profile_version": "set1-v1.7",
+  "boundaries": [
+    { "name": "orchestration", "owner": "set1-app-orchestrator", "may_implement_application_code": false },
+    { "name": "product_architecture", "owner": "s1-product-planner", "read_only": true },
+    { "name": "ui_ux", "owner": "s1-ui-ux", "read_only": true },
+    { "name": "application_implementation", "owner": "s1-app-implementer", "approval_required": true },
+    { "name": "data_api", "owner": "s1-data-api", "approval_required": true },
+    { "name": "testing", "owner": "s1-tester", "read_only": true },
+    { "name": "debugging", "owner": "s1-debugger", "read_only": true },
+    { "name": "technical_review", "owner": "s1-reviewer", "read_only": true },
+    { "name": "security", "owner": "s1-security", "read_only": true },
+    { "name": "readiness", "owner": "s1-readiness-auditor", "read_only": true },
+    { "name": "git_release", "owner": "s1-release", "write_approval_required": true }
+  ]
+}

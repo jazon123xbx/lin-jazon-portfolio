@@ -1,0 +1,12 @@
+{
+  "profile_version": "set1-v1.7",
+  "rules": [
+    "Do not add a dependency without explicit approval and necessity evidence.",
+    "Keep provider SDKs behind approved adapters.",
+    "Do not couple UI directly to databases or provider implementations.",
+    "Do not use configuration plugins when native permission rules are sufficient.",
+    "Never commit .opencode/node_modules/.",
+    "Review .opencode/package.json and package-lock.json before any future commit."
+  ],
+  "new_dependencies_required_by_this_configuration": []
+}

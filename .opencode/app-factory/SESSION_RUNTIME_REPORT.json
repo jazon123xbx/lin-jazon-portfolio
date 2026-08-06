@@ -1,0 +1,18 @@
+{
+  "profile_version": "set1-v1.7",
+  "date": "2026-08-06",
+  "repository": "lin-jazon-portfolio",
+  "branch": "chore/configure-set1-multimodel",
+  "runtime": "OpenCode 1.18.14",
+  "configuration_state": "CREATED_PENDING_HUMAN_REVIEW",
+  "delegation_test": "NOT_RUN_BY_INSTRUCTION",
+  "active_orchestrator": "openai/gpt-5.6-sol",
+  "maximum_concurrent_specialists": 2,
+  "subagent_depth": 1,
+  "github_mcp": "READ_ONLY",
+  "elevenlabs": "DISABLED",
+  "kimi": "DISABLED_QUOTA_EXHAUSTED",
+  "automatic_fallback": false,
+  "credentials_recorded": false,
+  "private_reasoning_recorded": false
+}
