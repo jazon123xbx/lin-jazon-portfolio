@@ -1,6 +1,14 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { navLinks, siteConfig, socialLinks } from "@/data/portfolio";
 import { getCurrentYear } from "@/lib/utils";
+
+const validSocialLinks = socialLinks.filter((social) => {
+  const url = String(social.url);
+  if (!url || url === "#" || url === "mailto:" || url.startsWith("Add ") || url.startsWith("mailto:Add ")) {
+    return false;
+  }
+  return true;
+});
 
 export default function Footer() {
   return (
@@ -34,19 +42,21 @@ export default function Footer() {
           </nav>
 
           {/* Social links */}
-          <div className="flex gap-4">
-            {socialLinks.map((social) => (
-              <a
-                key={social.label}
-                href={social.url}
-                className="text-sm text-text-secondary transition-colors hover:text-accent-blue"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {social.label}
-              </a>
-            ))}
-          </div>
+          {validSocialLinks.length > 0 && (
+            <div className="flex gap-4">
+              {validSocialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.url}
+                  className="text-sm text-text-secondary transition-colors hover:text-accent-blue"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {social.label}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Bottom */}

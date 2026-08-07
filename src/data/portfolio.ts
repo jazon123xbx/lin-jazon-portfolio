@@ -5,17 +5,14 @@ export const siteConfig = {
     "Portfolio of Lin — Student Developer and Digital Creator building useful, creative, and meaningful digital experiences.",
   url: "https://linjazon.dev",
   author: "Lin",
-  email: "Add professional email",
-  github: "Add GitHub URL",
-  linkedin: "Add LinkedIn URL",
 };
 
 export const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Projects", href: "/projects" },
-  { label: "Skills", href: "/skills" },
-  { label: "Contact", href: "/contact" },
+  { label: "Home", href: "/#hero" },
+  { label: "About", href: "/#about" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Skills", href: "/#skills" },
+  { label: "Contact", href: "/#contact" },
 ] as const;
 
 export type ProjectStatus =

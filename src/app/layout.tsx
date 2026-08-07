@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "LIN / JAZON — Student Developer and Digital Creator",
   description:
-    "Portfolio of Lin — Student Developer and Digital Creator building useful, creative, and meaningful digital experiences.",
+    "Portfolio of Lin — Student developer and digital creator building useful, creative, and meaningful digital experiences across web, mobile, and game development.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
