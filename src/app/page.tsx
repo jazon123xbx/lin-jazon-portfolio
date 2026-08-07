@@ -2,6 +2,7 @@
 import { about, projects, skillGroups, siteConfig } from "@/data/portfolio";
 import SectionHeader from "@/components/SectionHeader";
 import ProjectCard from "@/components/ProjectCard";
+import PortfolioHub from "@/components/PortfolioHub";
 
 const featuredProjects = [
   projects.find((p) => p.id === "jay-the-barber"),
@@ -53,6 +54,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Portfolio Hub */}
+      <PortfolioHub />
+
       {/* Selected Projects */}
       <section id="projects" className="border-t border-border-subtle">
         <div className="mx-auto max-w-6xl px-6 py-20">
@@ -69,11 +73,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Skills */}
-      <section id="skills" className="border-t border-border-subtle bg-bg-surface">
+      {/* Capabilities */}
+      <section id="capabilities" className="border-t border-border-subtle bg-bg-surface">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <SectionHeader
-            label="Skills"
+            label="Capabilities"
             title="What I Work With"
             description="Technologies and tools I use to bring ideas to life."
           />

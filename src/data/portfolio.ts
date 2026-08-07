@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: "LIN / JAZON",
+  name: "LIN.",
   title: "LIN / JAZON — Student Developer and Digital Creator",
   description:
     "Portfolio of Lin — Student Developer and Digital Creator building useful, creative, and meaningful digital experiences.",
@@ -11,7 +11,7 @@ export const navLinks = [
   { label: "Home", href: "/#hero" },
   { label: "About", href: "/#about" },
   { label: "Projects", href: "/#projects" },
-  { label: "Skills", href: "/#skills" },
+  { label: "Capabilities", href: "/#capabilities" },
   { label: "Contact", href: "/#contact" },
 ] as const;
 

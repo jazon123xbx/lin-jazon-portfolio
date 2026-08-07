@@ -28,7 +28,7 @@ export default function Navigation() {
   }, []);
 
   useEffect(() => {
-    const sectionIds = ["hero", "projects", "skills", "about", "contact"];
+    const sectionIds = ["hero", "projects", "capabilities", "about", "contact"];
 
     const observer = new IntersectionObserver(
       (entries) => {
