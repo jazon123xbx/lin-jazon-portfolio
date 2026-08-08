@@ -1,5 +1,6 @@
 import HubExperience from "./HubExperience";
 import StagePointerGlow from "./StagePointerGlow";
+import HubIdentity from "./HubIdentity";
 
 export default function PortfolioHub() {
   return (
@@ -22,10 +23,15 @@ export default function PortfolioHub() {
           </p>
         </div>
 
-        {/* Responsive Stage with grounded shadow */}
-        <StagePointerGlow className="mx-auto aspect-[3/2] w-full max-w-xs shadow-[0_25px_50px_-12px_rgba(30,58,95,0.18)] sm:aspect-[16/10] sm:max-w-xl lg:max-w-4xl xl:max-w-5xl">
-          <HubExperience />
-        </StagePointerGlow>
+        {/* Decorative identity layer wraps (never overlaps) the stage */}
+        <div className="relative mx-auto max-w-5xl px-0 py-8 sm:px-10 sm:py-10">
+          <HubIdentity />
+
+          {/* Responsive Stage with grounded shadow */}
+          <StagePointerGlow className="relative z-10 mx-auto aspect-[3/2] w-full max-w-xs shadow-[0_25px_50px_-12px_rgba(30,58,95,0.18)] sm:aspect-[16/10] sm:max-w-xl lg:max-w-4xl xl:max-w-5xl">
+            <HubExperience />
+          </StagePointerGlow>
+        </div>
       </div>
     </section>
   );
