@@ -80,6 +80,10 @@ const overlayLinks = [
 /** Delay before nav links appear after the welcome content. */
 const NAV_REVEAL_DELAY_MS = 600;
 
+/** Screen boot overlay ("LIN. SYSTEM") appears during power-on, before UI reveal. */
+const BOOT_START_MS = 820; // aligns with screen power-on in LaptopPrototype
+const BOOT_END_MS = 1500; // boot overlay fades as the welcome UI reveals
+
 function navigateTo(href: string) {
   const id = href.replace("/#", "");
   const target = document.getElementById(id);
@@ -123,11 +127,13 @@ export default function HubExperience() {
   const [openRequested, setOpenRequested] = useState(false);
   const [opened, setOpened] = useState(false);
   const [navRevealed, setNavRevealed] = useState(false);
+  const [bootActive, setBootActive] = useState(false);
 
   // ── Refs ──
   const openedRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const navTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bootTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const isFallbackMode = webglStatus === 'unsupported' || canvasFailed;
   const showCanvas = webglStatus === 'supported' && !canvasFailed;
@@ -160,9 +166,17 @@ export default function HubExperience() {
       // Snap to final state immediately — no opening animation.
       setOpened(true);
       setNavRevealed(true);
+      return;
     }
-    // Normal motion: LaptopPrototype runs the opening timeline,
-    // fires onOpened when complete, then the timer reveals nav.
+
+    // Normal motion: schedule the screen boot overlay to coincide with the
+    // 3D power-on, then hand off to the welcome UI reveal.
+    bootTimersRef.current.push(
+      setTimeout(() => setBootActive(true), BOOT_START_MS),
+      setTimeout(() => setBootActive(false), BOOT_END_MS),
+    );
+    // LaptopPrototype runs the opening timeline, fires onOpened when complete,
+    // then the timer reveals nav.
   }, [reducedMotion]);
 
   /** Coarse callback from LaptopPrototype when the opening timeline finishes. */
@@ -185,6 +199,12 @@ export default function HubExperience() {
       if (navTimerRef.current) clearTimeout(navTimerRef.current);
     };
   }, [experienceOpened, navRevealed, reducedMotion]);
+
+  // Clear any pending boot timers on unmount.
+  useEffect(() => {
+    const timers = bootTimersRef.current;
+    return () => timers.forEach(clearTimeout);
+  }, []);
 
   return (
     <div ref={containerRef} className="relative h-full w-full">
@@ -212,6 +232,28 @@ export default function HubExperience() {
         </LocalErrorBoundary>
       )}
 
+      {/* ── Screen boot overlay — "power-on" transition before the UI ── */}
+      <div
+        className={cn(
+          "pointer-events-none absolute left-1/2 top-[18%] z-10 w-[60%] -translate-x-1/2 overflow-hidden rounded-[3px]",
+          "sm:top-[19%] sm:w-[44%] lg:w-[36%]",
+          "transition-opacity duration-300 ease-out",
+          bootActive ? "opacity-100" : "opacity-0",
+        )}
+        aria-hidden="true"
+      >
+        <div className="relative flex flex-col items-center justify-center py-4">
+          {/* Sweeping blue scan line */}
+          <span className="laptop-boot-sweep" />
+          <span className="font-mono text-[9px] font-bold tracking-[0.28em] text-accent-blue sm:text-[11px]">
+            LIN. SYSTEM
+          </span>
+          <span className="mt-1 font-mono text-[7px] uppercase tracking-[0.22em] text-white/45 sm:text-[9px]">
+            Creative Developer Environment
+          </span>
+        </div>
+      </div>
+
       {/* ── CTA button — associated with the closed laptop ── */}
       {showCta && (
         <button
@@ -237,8 +279,8 @@ export default function HubExperience() {
         )}
         aria-hidden={!showContent}
       >
-        {/* Welcome content */}
-        <div className="text-center">
+        {/* Welcome content — staggered reveal */}
+        <div className={cn("text-center", showContent && "laptop-seq")}>
           <h3 className="text-[11px] font-bold text-white sm:text-base">
             Welcome to Lin&apos;s Portfolio
           </h3>
@@ -271,7 +313,7 @@ export default function HubExperience() {
           aria-label="Portfolio sections"
           aria-hidden={!showNav}
         >
-          <ul className="grid grid-cols-2 gap-1">
+          <ul className={cn("grid grid-cols-2 gap-1", showNav && "laptop-seq")}>
             {overlayLinks.map((link) => (
               <li key={link.href}>
                 <a
@@ -279,15 +321,27 @@ export default function HubExperience() {
                   onClick={(e) => { e.preventDefault(); navigateTo(link.href); }}
                   tabIndex={showNav ? undefined : -1}
                   className={cn(
-                    "flex min-h-[44px] items-center justify-center rounded-lg",
+                    "group/tile relative flex min-h-[44px] items-center justify-center gap-1 overflow-hidden rounded-lg",
                     "border border-white/15 bg-white/10 px-3 py-1.5 text-[11px] font-medium text-white/90",
-                    "backdrop-blur-sm transition-colors",
-                    "hover:border-white/30 hover:bg-white/20 hover:text-white",
+                    "backdrop-blur-sm transition-all duration-300 ease-out",
+                    "hover:-translate-y-0.5 hover:border-accent-blue/60 hover:bg-white/20 hover:text-white",
+                    "hover:shadow-[0_6px_16px_-6px_rgba(45,127,249,0.5)]",
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue",
                     "sm:text-xs",
                   )}
                 >
-                  {link.label}
+                  {/* Blue edge illumination */}
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-0 top-0 h-full w-[2px] bg-accent-blue opacity-0 transition-opacity duration-300 group-hover/tile:opacity-100"
+                  />
+                  <span>{link.label}</span>
+                  <span
+                    aria-hidden="true"
+                    className="translate-x-0 text-accent-blue opacity-0 transition-all duration-300 group-hover/tile:translate-x-0.5 group-hover/tile:opacity-100"
+                  >
+                    &rarr;
+                  </span>
                 </a>
               </li>
             ))}

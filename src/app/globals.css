@@ -519,3 +519,72 @@ html.js-ready .reveal[data-reveal-init] .line-grow {
     transform: none !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   LAPTOP HERO — screen boot + staggered UI reveal
+   ══════════════════════════════════════════════════════════ */
+
+/* Sequenced reveal for on-screen welcome content + nav tiles. */
+@keyframes laptopSeqIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.laptop-seq > * {
+  opacity: 0;
+  animation: laptopSeqIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.laptop-seq > *:nth-child(1) { animation-delay: 0.05s; }
+.laptop-seq > *:nth-child(2) { animation-delay: 0.14s; }
+.laptop-seq > *:nth-child(3) { animation-delay: 0.23s; }
+.laptop-seq > *:nth-child(4) { animation-delay: 0.32s; }
+.laptop-seq > *:nth-child(5) { animation-delay: 0.41s; }
+.laptop-seq > *:nth-child(6) { animation-delay: 0.50s; }
+
+/* Blue scan-line sweep across the boot overlay. */
+@keyframes laptopBootSweep {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+.laptop-boot-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 45%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(45, 127, 249, 0.55),
+    transparent
+  );
+  animation: laptopBootSweep 0.7s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .laptop-seq > * {
+    opacity: 1;
+    animation: none !important;
+  }
+  .laptop-boot-sweep {
+    animation: none !important;
+    opacity: 0;
+  }
+}
