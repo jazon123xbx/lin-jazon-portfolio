@@ -1,17 +1,42 @@
 ﻿"use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { navLinks, siteConfig } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("hero");
+  const [activeSection, setActiveSection] = useState("portfolio-hub");
 
-  function closeMobileMenu() {
+  const navigateTo = useCallback((href: string) => {
+    const id = href.replace("/#", "");
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    if (window.location.hash === `#${id}`) {
+      history.replaceState(null, "", href);
+    } else {
+      history.pushState(null, "", href);
+    }
+
+    setActiveSection(id);
     setMobileOpen(false);
-  }
+  }, []);
+
+  // Ensure fresh load / refresh starts at Home
+  useEffect(() => {
+    const prev = history.scrollRestoration;
+    history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+    if (window.location.hash) {
+      history.replaceState(null, "", "/");
+    }
+    return () => {
+      history.scrollRestoration = prev;
+    };
+  }, []);
 
   useEffect(() => {
     function handleEscape(event: KeyboardEvent) {
@@ -28,7 +53,7 @@ export default function Navigation() {
   }, []);
 
   useEffect(() => {
-    const sectionIds = ["hero", "projects", "capabilities", "about", "contact"];
+    const sectionIds = ["portfolio-hub", "projects", "capabilities", "about", "contact"];
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -65,13 +90,14 @@ export default function Navigation() {
         className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6"
         aria-label="Primary navigation"
       >
-        <Link
-          href="/#hero"
-          onClick={closeMobileMenu}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- SPA portfolio: all nav handled by navigateTo */}
+        <a
+          href="/#portfolio-hub"
+          onClick={(e) => { e.preventDefault(); navigateTo("/#portfolio-hub"); }}
           className="text-lg font-bold tracking-widest text-text-primary transition-colors hover:text-accent-blue"
         >
           {siteConfig.name}
-        </Link>
+        </a>
 
         <ul className="hidden items-center gap-1 md:flex">
           {navLinks.map((link) => {
@@ -80,8 +106,9 @@ export default function Navigation() {
 
             return (
               <li key={link.href}>
-                <Link
+                <a
                   href={link.href}
+                  onClick={(e) => { e.preventDefault(); navigateTo(link.href); }}
                   aria-current={isActive ? "location" : undefined}
                   className={cn(
                     "relative rounded-md px-4 py-2 text-sm font-medium transition-colors",
@@ -98,7 +125,7 @@ export default function Navigation() {
                       className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 rounded-full bg-accent-blue"
                     />
                   )}
-                </Link>
+                </a>
               </li>
             );
           })}
@@ -149,9 +176,9 @@ export default function Navigation() {
 
               return (
                 <li key={link.href}>
-                  <Link
+                  <a
                     href={link.href}
-                    onClick={closeMobileMenu}
+                    onClick={(e) => { e.preventDefault(); navigateTo(link.href); }}
                     aria-current={isActive ? "location" : undefined}
                     className={cn(
                       "block rounded-md px-4 py-3 text-sm font-medium transition-colors",
@@ -161,7 +188,7 @@ export default function Navigation() {
                     )}
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               );
             })}

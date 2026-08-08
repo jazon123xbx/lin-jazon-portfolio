@@ -1,14 +1,14 @@
 export const siteConfig = {
   name: "LIN.",
-  title: "LIN / JAZON — Student Developer and Digital Creator",
+  title: "LIN / JAZON — Creative Developer & Problem Solver",
   description:
-    "Portfolio of Lin — Student Developer and Digital Creator building useful, creative, and meaningful digital experiences.",
+    "Portfolio of Lin — Creative Developer & Problem Solver building useful, creative, and meaningful digital experiences.",
   url: "https://linjazon.dev",
   author: "Lin",
 };
 
 export const navLinks = [
-  { label: "Home", href: "/#hero" },
+  { label: "Home", href: "/#portfolio-hub" },
   { label: "About", href: "/#about" },
   { label: "Projects", href: "/#projects" },
   { label: "Capabilities", href: "/#capabilities" },
@@ -34,12 +34,30 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "tcgc-student-master",
+    title: "TCGC Student Master",
+    description:
+      "A student productivity and academic management application built for tracking coursework, schedules, and institutional workflows.",
+    category: "Mobile Application",
+    tags: ["Flutter", "Dart"],
+    status: "In Development",
+  },
+  {
     id: "jazon-collective-market",
     title: "Jazon Collective Market",
     description:
       "A digital marketplace platform designed for creative collectives to showcase and sell their work.",
     category: "Web Application",
     tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+    status: "In Development",
+  },
+  {
+    id: "blazingheart",
+    title: "BlazingHeart",
+    description:
+      "A 2D platformer game built with Unity and C#.",
+    category: "Game Development",
+    tags: ["Unity", "C#"],
     status: "In Development",
   },
   {
@@ -50,24 +68,6 @@ export const projects: Project[] = [
     category: "Web Application",
     tags: ["React", "CSS", "JavaScript"],
     status: "Completed",
-  },
-  {
-    id: "tcgc-student-master",
-    title: "TCGC Student Master",
-    description:
-      "A student management and tracking application built for educational institution workflows.",
-    category: "Web Application",
-    tags: ["Flutter", "Dart", "Firebase"],
-    status: "Planning",
-  },
-  {
-    id: "godot-game-project",
-    title: "Godot Game Project",
-    description:
-      "An indie game project exploring 2D gameplay mechanics and interactive storytelling using the Godot engine.",
-    category: "Game Development",
-    tags: ["Godot", "GDScript"],
-    status: "In Development",
   },
   {
     id: "academic-projects",
@@ -103,18 +103,22 @@ export const skillGroups: SkillGroup[] = [
       { name: "HTML", level: "Comfortable" },
       { name: "CSS", level: "Comfortable" },
       { name: "JavaScript", level: "Comfortable" },
-      { name: "TypeScript", level: "Project Experience" },
-      { name: "React", level: "Project Experience" },
-      { name: "Next.js", level: "Project Experience" },
-      { name: "Tailwind CSS", level: "Comfortable" },
     ],
   },
   {
-    category: "Backend and Database",
+    category: "Programming Languages",
     skills: [
-      { name: "Supabase", level: "Familiar" },
-      { name: "PostgreSQL", level: "Familiar" },
-      { name: "Firebase", level: "Familiar" },
+      { name: "C", level: "Familiar" },
+      { name: "C++", level: "Familiar" },
+      { name: "C#", level: "Familiar" },
+    ],
+  },
+  {
+    category: "BACKEND & DATABASE TOOLS",
+    skills: [
+      { name: "SQLite", level: "Familiar" },
+      { name: "MySQL", level: "Familiar" },
+      { name: "XAMPP", level: "Familiar" },
     ],
   },
   {
@@ -127,18 +131,19 @@ export const skillGroups: SkillGroup[] = [
   {
     category: "Game Development",
     skills: [
-      { name: "Godot", level: "Familiar" },
-      { name: "GDScript", level: "Familiar" },
+      { name: "Unity", level: "Familiar" },
+      { name: "Roblox", level: "Familiar" },
+      { name: "C#", level: "Familiar" },
     ],
   },
   {
     category: "Creative and Development Tools",
     skills: [
-      { name: "Blender", level: "Currently Learning" },
       { name: "Git", level: "Comfortable" },
       { name: "GitHub", level: "Comfortable" },
+      { name: "VS Code", level: "Comfortable" },
       { name: "OpenCode", level: "Familiar" },
-      { name: "Figma", level: "Familiar" },
+      { name: "Claude Code", level: "Familiar" },
     ],
   },
 ];
@@ -156,6 +161,9 @@ export const about = {
     "Game Development",
     "Creative Technology",
     "Open Source",
+    "AI Engineering",
+    "AI Influencer",
+    "Video Editing",
   ],
   strengths: [
     "Problem Solving",
@@ -181,7 +189,16 @@ export const about = {
 };
 
 export const socialLinks = [
-  { label: "GitHub", url: "Add GitHub URL" },
-  { label: "LinkedIn", url: "Add LinkedIn URL" },
-  { label: "Email", url: "mailto:Add professional email" },
+  { label: "GitHub", url: "https://github.com/jazon123xbx" },
+  { label: "LinkedIn", url: "https://www.linkedin.com/in/john-lin-redido-198328428/?isSelfProfile=true" },
+  { label: "Email", url: "mailto:linredido@gmail.com" },
+] as const;
+
+export const contactMethods = [
+  { label: "Email", value: "linredido@gmail.com", href: "mailto:linredido@gmail.com" },
+  { label: "Facebook", value: "facebook.com/linzy12x", href: "https://www.facebook.com/linzy12x" },
+  { label: "GitHub", value: "github.com/jazon123xbx", href: "https://github.com/jazon123xbx" },
+  { label: "LinkedIn", value: "John Lin Redido", href: "https://www.linkedin.com/in/john-lin-redido-198328428/?isSelfProfile=true" },
+  { label: "WhatsApp", value: "0997 823 3534", href: "https://wa.me/639978233534" },
+  { label: "Backup Number", value: "0970 045 5407", href: "tel:+639700455407" },
 ] as const;

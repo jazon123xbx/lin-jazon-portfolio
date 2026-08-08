@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LIN / JAZON — Student Developer and Digital Creator",
+  title: "LIN. — Creative Developer & Problem Solver",
   description:
-    "Portfolio of Lin — Student developer and digital creator building useful, creative, and meaningful digital experiences across web, mobile, and game development.",
+    "Portfolio of Lin — Creative Developer & Problem Solver building useful, creative, and meaningful digital experiences.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

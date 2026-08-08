@@ -21,7 +21,7 @@ export default function Footer() {
               {siteConfig.name}
             </p>
             <p className="mt-1 text-sm text-text-secondary">
-              Student Developer and Digital Creator
+              Turning ideas into practical digital experiences.
             </p>
           </div>
 

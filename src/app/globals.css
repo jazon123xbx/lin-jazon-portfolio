@@ -15,7 +15,7 @@
   /* Text */
   --text-primary: #f0f0f0;
   --text-secondary: #8a8a9a;
-  --text-muted: #555566;
+  --text-muted: #8585a0;
 
   /* Border */
   --border-subtle: rgba(255, 255, 255, 0.06);
@@ -49,8 +49,9 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Smooth scroll */
+/* Smooth scroll + anchor offset for sticky navbar */
 html {
+  scroll-padding-top: 5rem; /* 80px = 64px navbar + 16px breathing room */
   scroll-behavior: smooth;
 }
 
@@ -135,14 +136,179 @@ html {
 .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
 .stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
 
-/* Scroll reveal */
+/* ── Reveal (progressive enhancement) ──────────────────────
+   Default: visible (no-JS fallback). When JS adds .js-ready
+   to <html>, [data-reveal-init] hides the element. Intersection
+  Observer then adds [data-revealed] to show it once. */
 .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
+.reveal[data-revealed] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Legacy class fallback */
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ── Card polish ─────────────────────────────────────────── */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px -5px rgba(45, 127, 249, 0.1);
+  }
+}
+
+.card:active {
+  transform: scale(0.98);
+}
+
+/* ── Stage pointer glow ──────────────────────────────────── */
+.stage-glow-highlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    600px circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+    rgba(45, 127, 249, 0.07),
+    transparent 60%
+  );
+  transition: opacity 0.3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stage-glow-highlight {
+    opacity: 1;
+  }
+}
+
+/* ── Portrait hover polish ──────────────────────────────── */
+.portrait-trigger {
+  transition: transform 250ms ease-out, box-shadow 250ms ease-out,
+    border-color 250ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .portrait-trigger:hover {
+    transform: scale(1.025) translateY(-2px);
+    box-shadow: 0 0 0 2px rgba(45, 127, 249, 0.3),
+      0 8px 24px rgba(45, 127, 249, 0.15);
+    border-color: #4a4a54;
+    cursor: zoom-in;
+  }
+}
+
+/* ── Reduced-motion overrides ────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
+    transform: none;
+  }
+
+  .card:hover,
+  .card:active {
+    transform: none !important;
+  }
+
+  .portrait-trigger:hover {
+    transform: none !important;
+  }
+
+  .stage-glow-highlight {
+    opacity: 0 !important;
+  }
+}
+
+/* ── Typography scale ───────────────────────────────────── */
+/* Hero identity — strongest but not viewport-dominating */
+.ty-hero {
+  font-size: clamp(1.625rem, 0.4vw + 1.4rem, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 640px) {
+  .ty-hero {
+    font-size: clamp(2rem, 0.35vw + 1.7rem, 2.75rem);
+  }
+}
+
+/* About subsection headings (h3) */
+.ty-sub {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Eyebrow — small uppercase editorial gold */
+.ty-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Body — comfortable reading */
+.ty-body {
+  font-size: clamp(0.9375rem, 0.1vw + 0.88rem, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0;
+}
+
+/* Card titles */
+.ty-card-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+
+/* Chips / tags */
+.ty-chip {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* Contact inner action anchor — ≥44px tap target */
+.ty-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ty-action:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
 }

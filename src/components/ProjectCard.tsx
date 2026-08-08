@@ -14,15 +14,15 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <article className="group rounded-xl border border-border-subtle bg-bg-surface p-6 transition-all duration-300 hover:border-border-accent glow-card">
+    <article className="group rounded-xl border border-border-subtle bg-bg-surface p-6 transition-all duration-300 hover:border-border-accent hover:bg-bg-surface-elevated glow-card active:scale-[0.98]">
       {/* Header */}
-      <div className="mb-4 flex items-start justify-between">
-        <span className="text-xs font-medium uppercase tracking-wider text-text-muted">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <span className="ty-eyebrow text-text-muted">
           {project.category}
         </span>
         <span
           className={cn(
-            "rounded-full px-3 py-1 text-xs font-medium",
+            "ty-chip shrink-0 rounded-full px-3 py-1",
             statusColors[project.status]
           )}
         >
@@ -31,10 +31,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       </div>
 
       {/* Title and description */}
-      <h3 className="mb-2 text-xl font-bold text-text-primary transition-colors group-hover:text-accent-blue">
+      <h3 className="ty-card-title mb-2 text-text-primary transition-colors group-hover:text-accent-blue">
         {project.title}
       </h3>
-      <p className="mb-4 text-sm leading-relaxed text-text-secondary">
+      <p className="ty-body mb-4 text-text-secondary">
         {project.description}
       </p>
 
@@ -43,7 +43,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         {project.tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-md bg-bg-surface-elevated px-2.5 py-1 text-xs text-text-secondary"
+            className="ty-chip rounded-md bg-bg-primary px-2.5 py-1 text-text-muted"
           >
             {tag}
           </span>
@@ -55,7 +55,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         {project.detailsUrl && (
           <a
             href={project.detailsUrl}
-            className="rounded-lg bg-accent-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-blue-dim"
+            className="ty-action bg-accent-blue text-white hover:bg-accent-blue-dim"
           >
             View Details
           </a>
@@ -63,7 +63,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         {project.sourceUrl && (
           <a
             href={project.sourceUrl}
-            className="rounded-lg border border-border-subtle px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:border-border-accent hover:text-text-primary"
+            className="ty-action border border-border-subtle text-text-secondary hover:border-border-accent hover:text-text-primary"
             target="_blank"
             rel="noopener noreferrer"
           >
