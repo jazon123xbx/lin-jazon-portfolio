@@ -312,3 +312,279 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   outline: 2px solid var(--accent-blue);
   outline-offset: 2px;
 }
+
+/* ══════════════════════════════════════════════════════════
+   CREATIVE MOTION PRIMITIVES
+   All effects use transform/opacity only (GPU-friendly),
+   are gated behind fine pointers where interactive, and
+   collapse under prefers-reduced-motion.
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Section index label (mono) ──────────────────────────── */
+.ty-index {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--accent-blue);
+}
+
+/* ── Giant faint decorative word ─────────────────────────── */
+.ty-mega {
+  font-size: clamp(3.5rem, 17vw, 12rem);
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  color: rgba(240, 240, 240, 0.028);
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+@keyframes megaDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-2%, 0, 0);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ty-mega {
+    animation: megaDrift 26s ease-in-out infinite;
+    will-change: transform;
+  }
+}
+
+/* ── Sequenced entrance (staggers when its Reveal parent
+      gains [data-revealed]) ────────────────────────────── */
+@keyframes seqIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html.js-ready .reveal[data-reveal-init] .seq > * {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.reveal[data-revealed] .seq > * {
+  animation: seqIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.reveal[data-revealed] .seq > *:nth-child(1) { animation-delay: 0.02s; }
+.reveal[data-revealed] .seq > *:nth-child(2) { animation-delay: 0.09s; }
+.reveal[data-revealed] .seq > *:nth-child(3) { animation-delay: 0.16s; }
+.reveal[data-revealed] .seq > *:nth-child(4) { animation-delay: 0.23s; }
+.reveal[data-revealed] .seq > *:nth-child(5) { animation-delay: 0.30s; }
+.reveal[data-revealed] .seq > *:nth-child(6) { animation-delay: 0.37s; }
+
+/* ── Growing accent line ─────────────────────────────────── */
+@keyframes lineGrow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+html.js-ready .reveal[data-reveal-init] .line-grow {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.reveal[data-revealed] .line-grow {
+  transform-origin: left;
+  animation: lineGrow 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.1s;
+}
+
+/* ── Ambient drifting grid ───────────────────────────────── */
+.bg-grid-drift {
+  background-image:
+    linear-gradient(rgba(45, 127, 249, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 127, 249, 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@keyframes gridDrift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 56px 56px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bg-grid-drift {
+    animation: gridDrift 34s linear infinite;
+  }
+}
+
+/* ── Status indicator dot ────────────────────────────────── */
+@keyframes statusPulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(45, 127, 249, 0.5);
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 0 6px rgba(45, 127, 249, 0);
+  }
+}
+
+.status-dot {
+  animation: statusPulse 2.6s ease-in-out infinite;
+}
+
+/* ── Perspective tilt (project showcase, desktop only) ───── */
+.tilt-card {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease, box-shadow 0.35s ease;
+  transform-style: preserve-3d;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tilt-card {
+    transform: perspective(1100px) rotateX(var(--tilt-x, 0deg))
+      rotateY(var(--tilt-y, 0deg)) translateZ(0);
+  }
+  .tilt-card:hover {
+    border-color: var(--border-accent);
+    box-shadow: 0 24px 60px -24px rgba(45, 127, 249, 0.35);
+  }
+}
+
+/* Moving blue edge glow */
+.edge-glow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--accent-blue),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .edge-glow:hover::after {
+    opacity: 1;
+  }
+}
+
+/* Animated arrow nudge */
+.arrow-nudge {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .group\/proj:hover .arrow-nudge {
+    transform: translateX(4px);
+  }
+}
+
+/* ── Reduced-motion overrides for new primitives ─────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ty-mega,
+  .bg-grid-drift,
+  .status-dot {
+    animation: none !important;
+  }
+
+  html.js-ready .reveal[data-reveal-init] .seq > *,
+  html.js-ready .reveal[data-reveal-init] .line-grow {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .reveal[data-revealed] .seq > *,
+  .reveal[data-revealed] .line-grow {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .tilt-card {
+    transform: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   LAPTOP HERO — screen boot + staggered UI reveal
+   ══════════════════════════════════════════════════════════ */
+
+/* Sequenced reveal for on-screen welcome content + nav tiles. */
+@keyframes laptopSeqIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.laptop-seq > * {
+  opacity: 0;
+  animation: laptopSeqIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.laptop-seq > *:nth-child(1) { animation-delay: 0.05s; }
+.laptop-seq > *:nth-child(2) { animation-delay: 0.14s; }
+.laptop-seq > *:nth-child(3) { animation-delay: 0.23s; }
+.laptop-seq > *:nth-child(4) { animation-delay: 0.32s; }
+.laptop-seq > *:nth-child(5) { animation-delay: 0.41s; }
+.laptop-seq > *:nth-child(6) { animation-delay: 0.50s; }
+
+/* Blue scan-line sweep across the boot overlay. */
+@keyframes laptopBootSweep {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+.laptop-boot-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 45%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(45, 127, 249, 0.55),
+    transparent
+  );
+  animation: laptopBootSweep 0.7s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .laptop-seq > * {
+    opacity: 1;
+    animation: none !important;
+  }
+  .laptop-boot-sweep {
+    animation: none !important;
+    opacity: 0;
+  }
+}
