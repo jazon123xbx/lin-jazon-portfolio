@@ -15,11 +15,21 @@ export const navLinks = [
   { label: "Contact", href: "/#contact" },
 ] as const;
 
+/* ── Projects ─────────────────────────────────────────────── */
+
 export type ProjectStatus =
   | "Planning"
   | "In Development"
   | "Completed"
   | "Case Study";
+
+export type MediaType = "image" | "video";
+
+export interface ProjectMedia {
+  type: MediaType;
+  src: string;
+  alt: string;
+}
 
 export interface Project {
   id: string;
@@ -28,6 +38,7 @@ export interface Project {
   category: string;
   tags: string[];
   status: ProjectStatus;
+  media: ProjectMedia[];
   detailsUrl?: string;
   sourceUrl?: string;
 }
@@ -41,6 +52,7 @@ export const projects: Project[] = [
     category: "Mobile Application",
     tags: ["Flutter", "Dart"],
     status: "In Development",
+    media: [],
   },
   {
     id: "jazon-collective-market",
@@ -50,6 +62,7 @@ export const projects: Project[] = [
     category: "Web Application",
     tags: ["Next.js", "TypeScript", "Tailwind CSS"],
     status: "In Development",
+    media: [],
   },
   {
     id: "blazingheart",
@@ -59,6 +72,7 @@ export const projects: Project[] = [
     category: "Game Development",
     tags: ["Unity", "C#"],
     status: "In Development",
+    media: [],
   },
   {
     id: "jay-the-barber",
@@ -68,6 +82,7 @@ export const projects: Project[] = [
     category: "Web Application",
     tags: ["React", "CSS", "JavaScript"],
     status: "Completed",
+    media: [],
   },
   {
     id: "academic-projects",
@@ -77,8 +92,18 @@ export const projects: Project[] = [
     category: "Academic",
     tags: ["HTML", "CSS", "JavaScript", "Python"],
     status: "Case Study",
+    media: [],
   },
 ];
+
+export const featuredProjects = projects.filter(
+  (p) =>
+    p.id === "tcgc-student-master" ||
+    p.id === "jazon-collective-market" ||
+    p.id === "blazingheart"
+);
+
+/* ── Skills ───────────────────────────────────────────────── */
 
 export type SkillLevel =
   | "Currently Learning"
@@ -93,12 +118,14 @@ export interface Skill {
 
 export interface SkillGroup {
   category: string;
+  moduleIndex: string;
   skills: Skill[];
 }
 
 export const skillGroups: SkillGroup[] = [
   {
     category: "Frontend Development",
+    moduleIndex: "MOD-01",
     skills: [
       { name: "HTML", level: "Comfortable" },
       { name: "CSS", level: "Comfortable" },
@@ -107,6 +134,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     category: "Programming Languages",
+    moduleIndex: "MOD-02",
     skills: [
       { name: "C", level: "Familiar" },
       { name: "C++", level: "Familiar" },
@@ -114,7 +142,8 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
   {
-    category: "BACKEND & DATABASE TOOLS",
+    category: "Backend & Database Tools",
+    moduleIndex: "MOD-03",
     skills: [
       { name: "SQLite", level: "Familiar" },
       { name: "MySQL", level: "Familiar" },
@@ -123,6 +152,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     category: "Mobile Development",
+    moduleIndex: "MOD-04",
     skills: [
       { name: "Flutter", level: "Familiar" },
       { name: "Dart", level: "Familiar" },
@@ -130,6 +160,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     category: "Game Development",
+    moduleIndex: "MOD-05",
     skills: [
       { name: "Unity", level: "Familiar" },
       { name: "Roblox", level: "Familiar" },
@@ -137,7 +168,8 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
   {
-    category: "Creative and Development Tools",
+    category: "Creative & Development Tools",
+    moduleIndex: "MOD-06",
     skills: [
       { name: "Git", level: "Comfortable" },
       { name: "GitHub", level: "Comfortable" },
@@ -147,6 +179,15 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
 ];
+
+/* ── About ────────────────────────────────────────────────── */
+
+export const aboutIdentity = [
+  { label: "REAL NAME", value: "John Lin C. Redido" },
+  { label: "AGE", value: "20" },
+  { label: "GENDER", value: "Male" },
+  { label: "LOCATION", value: "Purok 8, Lapasan, Clarin, Misamis Occidental" },
+] as const;
 
 export const about = {
   headline: "About Me",
@@ -187,6 +228,8 @@ export const about = {
   careerGoals:
     "I aim to grow into a versatile developer who bridges design and engineering, creating digital products that are functional, beautiful, and accessible.",
 };
+
+/* ── Social / Contact ─────────────────────────────────────── */
 
 export const socialLinks = [
   { label: "GitHub", url: "https://github.com/jazon123xbx" },

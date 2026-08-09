@@ -7,23 +7,25 @@
   --bg-surface-elevated: #1a1a25;
 
   /* Accent */
-  --accent-blue: #2d7ff9;
-  --accent-blue-dim: #1a5cc4;
-  --accent-gold: #c9a84c;
-  --accent-gold-dim: #a08638;
+  --accent-blue: #5E8DFF;
+  --accent-blue-dim: #4a75cc;
+  --accent-blue-soft: #8BAAFF;
+  --accent-gold: #D8B45F;
+  --accent-gold-dim: #b89a4d;
+  --accent-gold-soft: #F0D58A;
 
   /* Text */
-  --text-primary: #f0f0f0;
-  --text-secondary: #8a8a9a;
-  --text-muted: #8585a0;
+  --text-primary: #F5F0E6;
+  --text-secondary: #C8D1DF;
+  --text-muted: #929EAE;
 
   /* Border */
   --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-accent: rgba(45, 127, 249, 0.3);
+  --border-accent: rgba(94, 141, 255, 0.3);
 
   /* Glow */
-  --glow-blue: 0 0 20px rgba(45, 127, 249, 0.15);
-  --glow-gold: 0 0 15px rgba(201, 168, 76, 0.1);
+  --glow-blue: 0 0 20px rgba(94, 141, 255, 0.15);
+  --glow-gold: 0 0 15px rgba(216, 180, 95, 0.1);
 }
 
 @theme inline {
@@ -32,8 +34,10 @@
   --color-bg-surface-elevated: var(--bg-surface-elevated);
   --color-accent-blue: var(--accent-blue);
   --color-accent-blue-dim: var(--accent-blue-dim);
+  --color-accent-blue-soft: var(--accent-blue-soft);
   --color-accent-gold: var(--accent-gold);
   --color-accent-gold-dim: var(--accent-gold-dim);
+  --color-accent-gold-soft: var(--accent-gold-soft);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
@@ -51,7 +55,7 @@ body {
 
 /* Smooth scroll + anchor offset for sticky navbar */
 html {
-  scroll-padding-top: 5rem; /* 80px = 64px navbar + 16px breathing room */
+  scroll-padding-top: 5rem;
   scroll-behavior: smooth;
 }
 
@@ -77,29 +81,104 @@ html {
 
 /* Selection styles */
 ::selection {
-  background: rgba(45, 127, 249, 0.3);
+  background: rgba(94, 141, 255, 0.3);
   color: var(--text-primary);
 }
 
-/* Subtle grid background */
+/* ── Grid background ────────────────────────────────────────── */
 .bg-grid {
   background-image:
-    linear-gradient(rgba(45, 127, 249, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(45, 127, 249, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(94, 141, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 141, 255, 0.03) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
-/* Glow card effect */
+/* ── Section background words ───────────────────────────────── */
+.section-bg-word {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  font-size: clamp(3rem, 8vw, 8rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.018);
+  white-space: nowrap;
+  z-index: 0;
+}
+
+/* ── Section coordinate labels ──────────────────────────────── */
+.section-coord {
+  position: absolute;
+  pointer-events: none;
+  font-size: 0.625rem;
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.1em;
+  color: var(--accent-blue);
+  opacity: 0.25;
+}
+
+/* ── Section signal lines ───────────────────────────────────── */
+.section-signal-line {
+  position: absolute;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(94, 141, 255, 0.08), transparent);
+}
+
+/* ── SystemThread ───────────────────────────────────────────── */
+.system-thread-wrap {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .system-thread-wrap {
+    display: block;
+    position: relative;
+    height: 80px;
+    overflow: hidden;
+  }
+
+  .system-thread-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(94, 141, 255, 0.15) 30%,
+      rgba(94, 141, 255, 0.15) 70%,
+      transparent 100%
+    );
+    transform: translateX(-50%);
+  }
+
+  .system-thread-line::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    opacity: 0.3;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ── Glow card effect ───────────────────────────────────────── */
 .glow-card {
   box-shadow: var(--glow-blue);
   transition: box-shadow 0.3s ease;
 }
 
 .glow-card:hover {
-  box-shadow: 0 0 30px rgba(45, 127, 249, 0.25);
+  box-shadow: 0 0 30px rgba(94, 141, 255, 0.25);
 }
 
-/* Gradient text */
+/* ── Gradient text ──────────────────────────────────────────── */
 .gradient-text {
   background: linear-gradient(135deg, var(--accent-blue), var(--accent-gold));
   -webkit-background-clip: text;
@@ -107,7 +186,7 @@ html {
   background-clip: text;
 }
 
-/* Fade in animation */
+/* ── Fade in animation ──────────────────────────────────────── */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -123,7 +202,7 @@ html {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-/* Stagger children */
+/* ── Stagger children ───────────────────────────────────────── */
 .stagger-children > * {
   opacity: 0;
   animation: fadeInUp 0.5s ease-out forwards;
@@ -136,10 +215,8 @@ html {
 .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
 .stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
 
-/* ── Reveal (progressive enhancement) ──────────────────────
-   Default: visible (no-JS fallback). When JS adds .js-ready
-   to <html>, [data-reveal-init] hides the element. Intersection
-  Observer then adds [data-revealed] to show it once. */
+/* ── Reveal system (progressive enhancement) ────────────────── */
+
 .reveal {
   opacity: 1;
   transform: none;
@@ -148,12 +225,13 @@ html {
 html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.reveal[data-revealed] {
+html.js-ready .reveal[data-reveal-init][data-revealed] {
   opacity: 1;
   transform: translateY(0);
+  transition: opacity 0.6s ease var(--reveal-delay, 0ms),
+    transform 0.6s ease var(--reveal-delay, 0ms);
 }
 
 /* Legacy class fallback */
@@ -162,7 +240,190 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   transform: translateY(0);
 }
 
-/* ── Card polish ─────────────────────────────────────────── */
+/* ── Reveal variant: mask-text ───────────────────────────────── */
+html.js-ready .reveal-mask-text[data-reveal-init]:not([data-revealed]) {
+  clip-path: inset(0 100% 0 0);
+  transform: none;
+}
+
+html.js-ready .reveal-mask-text[data-reveal-init][data-revealed] {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1) var(--reveal-delay, 0ms);
+}
+
+/* ── Reveal variant: clip-wipe ───────────────────────────────── */
+html.js-ready .reveal-clip-wipe[data-reveal-init]:not([data-revealed]) {
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  transform: none;
+}
+
+html.js-ready .reveal-clip-wipe[data-reveal-init][data-revealed] {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transition: clip-path 0.7s cubic-bezier(0.77, 0, 0.175, 1) var(--reveal-delay, 0ms);
+}
+
+/* ── Reveal variant: line-draw ───────────────────────────────── */
+html.js-ready .reveal-line-draw[data-reveal-init]:not([data-revealed]) {
+  position: relative;
+  overflow: hidden;
+}
+
+html.js-ready .reveal-line-draw[data-reveal-init]:not([data-revealed])::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-blue);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+html.js-ready .reveal-line-draw[data-reveal-init][data-revealed]::after {
+  transform: scaleX(1);
+  transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1) var(--reveal-delay, 0ms);
+}
+
+/* ── Reveal variant: bracket-expand ──────────────────────────── */
+html.js-ready .reveal-bracket-expand[data-reveal-init]:not([data-revealed]) {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+html.js-ready .reveal-bracket-expand[data-reveal-init][data-revealed] {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.5s ease var(--reveal-delay, 0ms),
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--reveal-delay, 0ms);
+}
+
+/* ── Reveal variant: media-reveal ────────────────────────────── */
+html.js-ready .reveal-media-reveal[data-reveal-init]:not([data-revealed]) {
+  clip-path: inset(0 0 100% 0);
+  transform: none;
+}
+
+html.js-ready .reveal-media-reveal[data-reveal-init][data-revealed] {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1) var(--reveal-delay, 0ms);
+}
+
+/* ── Reveal variant: stagger ─────────────────────────────────── */
+/* Base: transition declared on children always matching revealed state.
+   nth-child delays combine with --reveal-delay via calc(). */
+html.js-ready .reveal-stagger[data-reveal-init]:not([data-revealed]) > * {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+html.js-ready .reveal-stagger[data-reveal-init]:not([data-revealed]) > *:nth-child(1) { transition-delay: 0s; }
+html.js-ready .reveal-stagger[data-reveal-init]:not([data-revealed]) > *:nth-child(2) { transition-delay: 0.08s; }
+html.js-ready .reveal-stagger[data-reveal-init]:not([data-revealed]) > *:nth-child(3) { transition-delay: 0.16s; }
+html.js-ready .reveal-stagger[data-reveal-init]:not([data-revealed]) > *:nth-child(4) { transition-delay: 0.24s; }
+html.js-ready .reveal-stagger[data-reveal-init]:not([data-revealed]) > *:nth-child(5) { transition-delay: 0.32s; }
+html.js-ready .reveal-stagger[data-reveal-init]:not([data-revealed]) > *:nth-child(6) { transition-delay: 0.4s; }
+
+html.js-ready .reveal-stagger[data-reveal-init][data-revealed] > * {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease calc(var(--reveal-delay, 0ms) + var(--stagger-delay, 0s)),
+    transform 0.4s ease calc(var(--reveal-delay, 0ms) + var(--stagger-delay, 0s));
+}
+
+html.js-ready .reveal-stagger[data-reveal-init][data-revealed] > *:nth-child(1) { --stagger-delay: 0s; }
+html.js-ready .reveal-stagger[data-reveal-init][data-revealed] > *:nth-child(2) { --stagger-delay: 0.08s; }
+html.js-ready .reveal-stagger[data-reveal-init][data-revealed] > *:nth-child(3) { --stagger-delay: 0.16s; }
+html.js-ready .reveal-stagger[data-reveal-init][data-revealed] > *:nth-child(4) { --stagger-delay: 0.24s; }
+html.js-ready .reveal-stagger[data-reveal-init][data-revealed] > *:nth-child(5) { --stagger-delay: 0.32s; }
+html.js-ready .reveal-stagger[data-reveal-init][data-revealed] > *:nth-child(6) { --stagger-delay: 0.4s; }
+
+/* ── Hero entrance animations ──────────────────────────────── */
+@keyframes hero-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-enter-kicker {
+  animation: hero-entrance 700ms cubic-bezier(0.22, 1, 0.36, 1) 0ms forwards;
+  opacity: 0;
+}
+
+.hero-enter-headline {
+  animation: hero-entrance 700ms cubic-bezier(0.22, 1, 0.36, 1) 120ms forwards;
+  opacity: 0;
+}
+
+.hero-enter-subtitle {
+  animation: hero-entrance 700ms cubic-bezier(0.22, 1, 0.36, 1) 240ms forwards;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter-kicker,
+  .hero-enter-headline,
+  .hero-enter-subtitle {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── CTA guide animation ────────────────────────────────────── */
+@keyframes cta-guide-pulse {
+  0%, 100% { opacity: 0.55; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(3px); }
+}
+
+.cta-guide-arrow {
+  animation: cta-guide-pulse 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-guide-arrow {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* ── Project artwork media ──────────────────────────────────── */
+.project-artwork {
+  transition: transform 450ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-artwork:hover {
+    transform: scale(1.02);
+  }
+}
+
+/* ── Project row hover lift ─────────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  .group\/project:hover {
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-artwork {
+    transition: none;
+  }
+  .project-artwork:hover {
+    transform: none;
+  }
+  .group\/project:hover {
+    transform: none;
+  }
+}
+
+/* ── Card polish ────────────────────────────────────────────── */
 .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease,
     border-color 0.3s ease;
@@ -171,7 +432,7 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px -5px rgba(45, 127, 249, 0.1);
+    box-shadow: 0 8px 25px -5px rgba(94, 141, 255, 0.1);
   }
 }
 
@@ -179,16 +440,16 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   transform: scale(0.98);
 }
 
-/* ── Stage pointer glow ──────────────────────────────────── */
+/* ── Stage pointer glow ─────────────────────────────────────── */
 .stage-glow-highlight {
   position: absolute;
   inset: 0;
   pointer-events: none;
   opacity: 0;
   background: radial-gradient(
-    600px circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
-    rgba(45, 127, 249, 0.07),
-    transparent 60%
+    450px circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+    rgba(94, 141, 255, 0.05),
+    transparent 55%
   );
   transition: opacity 0.3s ease;
 }
@@ -199,7 +460,7 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   }
 }
 
-/* ── Portrait hover polish ──────────────────────────────── */
+/* ── Portrait hover polish ──────────────────────────────────── */
 .portrait-trigger {
   transition: transform 250ms ease-out, box-shadow 250ms ease-out,
     border-color 250ms ease-out;
@@ -207,18 +468,135 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
 
 @media (hover: hover) and (pointer: fine) {
   .portrait-trigger:hover {
-    transform: scale(1.025) translateY(-2px);
-    box-shadow: 0 0 0 2px rgba(45, 127, 249, 0.3),
-      0 8px 24px rgba(45, 127, 249, 0.15);
+    transform: scale(1.02) translateY(-2px);
+    box-shadow: 0 0 0 2px rgba(94, 141, 255, 0.25),
+      0 8px 24px rgba(94, 141, 255, 0.12);
     border-color: #4a4a54;
     cursor: zoom-in;
   }
 }
 
-/* ── Reduced-motion overrides ────────────────────────────── */
+/* ── Technical portrait frame ───────────────────────────────── */
+.portrait-frame {
+  position: relative;
+}
+
+.portrait-frame::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1px solid rgba(94, 141, 255, 0.12);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.portrait-frame::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  opacity: 0.4;
+}
+
+/* ── Skill module card ──────────────────────────────────────── */
+.skill-module {
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-module::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 0;
+  background: var(--accent-blue);
+  transition: height 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.skill-module[data-revealed]::before {
+  height: 100%;
+}
+
+/* ── Contact panel ──────────────────────────────────────────── */
+.comm-link-panel {
+  position: relative;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.comm-link-panel::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+  opacity: 0.3;
+}
+
+/* ── Reduced-motion overrides ───────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
     transform: none;
+  }
+
+  html.js-ready .reveal[data-reveal-init][data-revealed] {
+    transition: none;
+  }
+
+  html.js-ready .reveal-mask-text[data-reveal-init]:not([data-revealed]) {
+    clip-path: none;
+  }
+
+  html.js-ready .reveal-mask-text[data-reveal-init][data-revealed] {
+    transition: none;
+  }
+
+  html.js-ready .reveal-clip-wipe[data-reveal-init]:not([data-revealed]) {
+    clip-path: none;
+  }
+
+  html.js-ready .reveal-clip-wipe[data-reveal-init][data-revealed] {
+    transition: none;
+  }
+
+  html.js-ready .reveal-line-draw[data-reveal-init]:not([data-revealed])::after {
+    transform: scaleX(1);
+  }
+
+  html.js-ready .reveal-line-draw[data-reveal-init][data-revealed]::after {
+    transition: none;
+  }
+
+  html.js-ready .reveal-bracket-expand[data-reveal-init]:not([data-revealed]) {
+    transform: none;
+  }
+
+  html.js-ready .reveal-bracket-expand[data-reveal-init][data-revealed] {
+    transition: none;
+  }
+
+  html.js-ready .reveal-media-reveal[data-reveal-init]:not([data-revealed]) {
+    clip-path: none;
+  }
+
+  html.js-ready .reveal-media-reveal[data-reveal-init][data-revealed] {
+    transition: none;
+  }
+
+  html.js-ready .reveal-stagger[data-reveal-init]:not([data-revealed]) > * {
+    transform: none;
+  }
+
+  html.js-ready .reveal-stagger[data-reveal-init][data-revealed] > * {
+    transition: none;
   }
 
   .card:hover,
@@ -233,15 +611,30 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   .stage-glow-highlight {
     opacity: 0 !important;
   }
+
+  .animate-pulse {
+    animation: none !important;
+  }
+
+  .system-thread-line {
+    opacity: 1;
+  }
 }
 
-/* ── Typography scale ───────────────────────────────────── */
-/* Hero identity — strongest but not viewport-dominating */
+/* ── Typography scale ───────────────────────────────────────── */
 .ty-hero {
   font-size: clamp(1.625rem, 0.4vw + 1.4rem, 2.5rem);
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.01em;
+}
+
+.ty-hero-title {
+  font-size: clamp(2rem, 4vw, 3.75rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
 }
 
 @media (min-width: 640px) {
@@ -250,7 +643,6 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   }
 }
 
-/* About subsection headings (h3) */
 .ty-sub {
   font-size: 0.8125rem;
   font-weight: 600;
@@ -259,7 +651,6 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   text-transform: uppercase;
 }
 
-/* Eyebrow — small uppercase editorial gold */
 .ty-eyebrow {
   font-size: 0.6875rem;
   font-weight: 600;
@@ -268,7 +659,6 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   text-transform: uppercase;
 }
 
-/* Body — comfortable reading */
 .ty-body {
   font-size: clamp(0.9375rem, 0.1vw + 0.88rem, 1.0625rem);
   font-weight: 400;
@@ -276,7 +666,6 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   letter-spacing: 0;
 }
 
-/* Card titles */
 .ty-card-title {
   font-size: 1.125rem;
   font-weight: 700;
@@ -284,7 +673,6 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   letter-spacing: -0.005em;
 }
 
-/* Chips / tags */
 .ty-chip {
   font-size: 0.75rem;
   font-weight: 500;
@@ -292,7 +680,6 @@ html.js-ready .reveal[data-reveal-init]:not([data-revealed]) {
   letter-spacing: 0.01em;
 }
 
-/* Contact inner action anchor — ≥44px tap target */
 .ty-action {
   display: inline-flex;
   align-items: center;

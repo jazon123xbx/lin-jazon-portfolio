@@ -25,7 +25,7 @@ export default function Navigation() {
     setMobileOpen(false);
   }, []);
 
-  // Ensure fresh load / refresh starts at Home
+  // LOCKED: Preserve existing scroll-reset block exactly unchanged
   useEffect(() => {
     const prev = history.scrollRestoration;
     history.scrollRestoration = "manual";
