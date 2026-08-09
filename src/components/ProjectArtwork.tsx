@@ -4,6 +4,7 @@
  */
 
 import Image from "next/image";
+import { basePath } from "@/lib/base-path";
 
 interface ProjectArtworkImage {
   src: string;
@@ -39,7 +40,7 @@ export default function ProjectArtwork({ projectId, className = "" }: ProjectArt
       className={`project-artwork relative overflow-hidden rounded-[14px] border border-border-subtle bg-bg-surface ${className}`}
     >
       <Image
-        src={image.src}
+        src={basePath(image.src)}
         alt={image.alt}
         fill
         sizes="(max-width: 1024px) 100vw, 58vw"

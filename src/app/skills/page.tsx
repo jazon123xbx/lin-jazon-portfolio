@@ -1,5 +1,5 @@
-﻿import { redirect } from "next/navigation";
+﻿import HashRedirect from "@/components/HashRedirect";
 
 export default function SkillsPage() {
-  redirect("/#capabilities");
+  return <HashRedirect section="capabilities" label="Capabilities" />;
 }

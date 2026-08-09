@@ -1,5 +1,5 @@
-﻿import { redirect } from "next/navigation";
+﻿import HashRedirect from "@/components/HashRedirect";
 
 export default function ProjectsPage() {
-  redirect("/#projects");
+  return <HashRedirect section="projects" label="Projects" />;
 }

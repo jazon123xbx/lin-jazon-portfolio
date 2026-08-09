@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { navLinks, siteConfig } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
+import { basePath } from "@/lib/base-path";
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -15,10 +16,11 @@ export default function Navigation() {
 
     target.scrollIntoView({ behavior: "smooth", block: "start" });
 
+    const prefixed = basePath(href);
     if (window.location.hash === `#${id}`) {
-      history.replaceState(null, "", href);
+      history.replaceState(null, "", prefixed);
     } else {
-      history.pushState(null, "", href);
+      history.pushState(null, "", prefixed);
     }
 
     setActiveSection(id);
@@ -31,7 +33,7 @@ export default function Navigation() {
     history.scrollRestoration = "manual";
     window.scrollTo(0, 0);
     if (window.location.hash) {
-      history.replaceState(null, "", "/");
+      history.replaceState(null, "", basePath("/"));
     }
     return () => {
       history.scrollRestoration = prev;
@@ -90,9 +92,8 @@ export default function Navigation() {
         className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6"
         aria-label="Primary navigation"
       >
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- SPA portfolio: all nav handled by navigateTo */}
         <a
-          href="/#portfolio-hub"
+          href={basePath("/#portfolio-hub")}
           onClick={(e) => { e.preventDefault(); navigateTo("/#portfolio-hub"); }}
           className="text-lg font-bold tracking-widest text-text-primary transition-colors hover:text-accent-blue"
         >
@@ -107,7 +108,7 @@ export default function Navigation() {
             return (
               <li key={link.href}>
                 <a
-                  href={link.href}
+                  href={basePath(link.href)}
                   onClick={(e) => { e.preventDefault(); navigateTo(link.href); }}
                   aria-current={isActive ? "location" : undefined}
                   className={cn(
@@ -177,7 +178,7 @@ export default function Navigation() {
               return (
                 <li key={link.href}>
                   <a
-                    href={link.href}
+                    href={basePath(link.href)}
                     onClick={(e) => { e.preventDefault(); navigateTo(link.href); }}
                     aria-current={isActive ? "location" : undefined}
                     className={cn(

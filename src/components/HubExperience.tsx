@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect, useSyncExternalStore, type ReactNode, type ErrorInfo, Component } from "react";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
+import { basePath } from "@/lib/base-path";
 import StaticLaptopFallback from "./StaticLaptopFallback";
 
 const LaptopCanvas = dynamic(() => import("./LaptopCanvas"), {
@@ -85,10 +86,11 @@ function navigateTo(href: string) {
 
   target.scrollIntoView({ behavior: "smooth", block: "start" });
 
+  const prefixed = basePath(href);
   if (window.location.hash === `#${id}`) {
-    history.replaceState(null, "", href);
+    history.replaceState(null, "", prefixed);
   } else {
-    history.pushState(null, "", href);
+    history.pushState(null, "", prefixed);
   }
 }
 
@@ -578,7 +580,7 @@ export default function HubExperience() {
                 style={{ transitionDelay: showNav ? `${i * 80}ms` : "0ms" }}
               >
                 <a
-                  href={link.href}
+                  href={basePath(link.href)}
                   onClick={(e) => {
                     e.preventDefault();
                     navigateTo(link.href);

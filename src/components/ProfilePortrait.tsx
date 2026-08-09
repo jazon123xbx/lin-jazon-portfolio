@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
+import { basePath } from "@/lib/base-path";
 
 interface ProfilePortraitProps {
   src: string;
@@ -63,7 +64,7 @@ export default function ProfilePortrait({ src, alt }: ProfilePortraitProps) {
         aria-label="Open portrait photo"
       >
         <img
-          src={src}
+          src={basePath(src)}
           alt={alt}
           className="h-full w-full object-cover object-top"
         />
@@ -91,7 +92,7 @@ export default function ProfilePortrait({ src, alt }: ProfilePortraitProps) {
           >
             <div className="relative max-w-[90vw] md:max-w-[720px]">
               <img
-                src={src}
+                src={basePath(src)}
                 alt={alt}
                 onClick={(e) => e.stopPropagation()}
                 className="max-h-[80vh] max-w-full rounded-xl object-contain border border-[#3c3c44] ring-1 ring-accent-blue/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"

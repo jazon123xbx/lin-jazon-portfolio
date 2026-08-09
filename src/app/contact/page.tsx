@@ -1,5 +1,5 @@
-﻿import { redirect } from "next/navigation";
+﻿import HashRedirect from "@/components/HashRedirect";
 
 export default function ContactPage() {
-  redirect("/#contact");
+  return <HashRedirect section="contact" label="Contact" />;
 }
