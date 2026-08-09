@@ -12,13 +12,12 @@ export default function ProfilePortrait({ src, alt }: ProfilePortraitProps) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
 
-  // Track client hydration for safe portal rendering
   function getMountedSnapshot() { return true; }
   function subscribeToMounted() { return () => {}; }
   const mounted = useSyncExternalStore(subscribeToMounted, getMountedSnapshot, () => false);
 
-  // Lock body scroll when lightbox is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -28,16 +27,18 @@ export default function ProfilePortrait({ src, alt }: ProfilePortraitProps) {
     }
   }, [isOpen]);
 
-  // Focus management: close button on open, trigger on close
   useEffect(() => {
     if (isOpen) {
-      closeButtonRef.current?.focus();
-    } else {
-      triggerRef.current?.focus();
+      wasOpenRef.current = true;
+      closeButtonRef.current?.focus({ preventScroll: true });
+      return;
+    }
+    if (wasOpenRef.current) {
+      triggerRef.current?.focus({ preventScroll: true });
+      wasOpenRef.current = false;
     }
   }, [isOpen]);
 
-  // Escape key handler
   useEffect(() => {
     if (!isOpen) return;
 
@@ -53,12 +54,12 @@ export default function ProfilePortrait({ src, alt }: ProfilePortraitProps) {
 
   return (
     <>
-      {/* Portrait trigger button */}
+      {/* Portrait trigger button with rectangular 4:5 technical frame */}
       <button
         ref={triggerRef}
         type="button"
         onClick={() => setIsOpen(true)}
-        className="portrait-trigger relative flex h-44 w-44 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[#3c3c44] ring-2 ring-accent-blue/30 sm:h-56 sm:w-56 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue"
+        className="portrait-trigger relative flex h-56 w-[176px] shrink-0 items-center justify-center overflow-hidden rounded-md border border-[#3c3c44] sm:h-72 sm:w-[224px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue"
         aria-label="Open portrait photo"
       >
         <img
@@ -66,8 +67,14 @@ export default function ProfilePortrait({ src, alt }: ProfilePortraitProps) {
           alt={alt}
           className="h-full w-full object-cover object-top"
         />
-        {/* Gold accent dot */}
-        <div className="absolute right-4 top-4 h-1.5 w-1.5 rounded-full bg-accent-gold/60 sm:right-5 sm:top-5" />
+        {/* Technical frame decorations */}
+        <div className="portrait-frame absolute inset-0" aria-hidden="true" />
+        {/* Coordinate labels */}
+        <span className="absolute bottom-2 left-2 text-[8px] font-mono text-accent-blue/40" aria-hidden="true">
+          24.0°N 121.5°E
+        </span>
+        {/* Edge light */}
+        <div className="absolute inset-0 rounded-md shadow-[inset_0_0_20px_rgba(45,127,249,0.1)]" aria-hidden="true" />
       </button>
 
       {/* Lightbox */}

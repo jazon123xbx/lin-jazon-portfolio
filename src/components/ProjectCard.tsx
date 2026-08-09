@@ -14,15 +14,15 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <article className="group rounded-xl border border-border-subtle bg-bg-surface p-6 transition-all duration-300 hover:border-border-accent hover:bg-bg-surface-elevated glow-card active:scale-[0.98]">
+    <article className="group rounded-lg border border-border-subtle bg-bg-surface p-5 transition-all duration-300 hover:border-border-accent hover:bg-bg-surface-elevated active:scale-[0.98] sm:p-6">
       {/* Header */}
-      <div className="mb-4 flex items-start justify-between gap-3">
+      <div className="mb-3 flex items-start justify-between gap-3">
         <span className="ty-eyebrow text-text-muted">
           {project.category}
         </span>
         <span
           className={cn(
-            "ty-chip shrink-0 rounded-full px-3 py-1",
+            "ty-chip shrink-0 rounded px-3 py-1",
             statusColors[project.status]
           )}
         >
@@ -31,7 +31,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       </div>
 
       {/* Title and description */}
-      <h3 className="ty-card-title mb-2 text-text-primary transition-colors group-hover:text-accent-blue">
+      <h3 className="ty-card-title mb-2 text-text-primary transition-colors duration-300">
         {project.title}
       </h3>
       <p className="ty-body mb-4 text-text-secondary">
@@ -39,11 +39,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       </p>
 
       {/* Tags */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-5 flex flex-wrap gap-2">
         {project.tags.map((tag) => (
           <span
             key={tag}
-            className="ty-chip rounded-md bg-bg-primary px-2.5 py-1 text-text-muted"
+            className="ty-chip rounded border border-border-subtle bg-bg-primary px-2.5 py-1 text-text-secondary"
           >
             {tag}
           </span>

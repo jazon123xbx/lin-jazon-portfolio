@@ -10,6 +10,7 @@ interface LaptopCanvasProps {
   openRequested?: boolean;
   reducedMotion?: boolean;
   onOpened?: () => void;
+  cameraPush?: boolean;
 }
 
 function LifecycleObserver({ onReady, onFailure }: Pick<LaptopCanvasProps, "onReady" | "onFailure">) {
@@ -25,7 +26,6 @@ function LifecycleObserver({ onReady, onFailure }: Pick<LaptopCanvasProps, "onRe
 
     canvas.addEventListener("webglcontextlost", handleContextLost);
 
-    // Signal ready after mount and listener attachment
     onReady?.();
 
     return () => {
@@ -36,18 +36,18 @@ function LifecycleObserver({ onReady, onFailure }: Pick<LaptopCanvasProps, "onRe
   return null;
 }
 
-export default function LaptopCanvas({ onReady, onFailure, openRequested, reducedMotion, onOpened }: LaptopCanvasProps) {
+export default function LaptopCanvas({ onReady, onFailure, openRequested, reducedMotion, onOpened, cameraPush }: LaptopCanvasProps) {
   return (
     <Canvas
       frameloop="demand"
       dpr={[1, 1.5]}
-      camera={{ fov: 35, position: [0, 0.6, 7], near: 0.1, far: 100 }}
+      camera={{ fov: 32, position: [0, 0.55, 7.2], near: 0.1, far: 100 }}
       gl={{ antialias: true, alpha: true }}
       onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       style={{ width: "100%", height: "100%" }}
     >
       <LifecycleObserver onReady={onReady} onFailure={onFailure} />
-      <LaptopScene openRequested={openRequested} reducedMotion={reducedMotion} onOpened={onOpened} />
+      <LaptopScene openRequested={openRequested} reducedMotion={reducedMotion} onOpened={onOpened} cameraPush={cameraPush} />
     </Canvas>
   );
 }

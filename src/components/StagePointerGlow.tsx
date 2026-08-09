@@ -40,6 +40,14 @@ export default function StagePointerGlow({
   return (
     <div ref={ref} className={`relative ${className}`}>
       {children}
+      {/* Restrained floor underglow */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300"
+        style={{
+          background: "radial-gradient(500px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(45,127,249,0.04), transparent 55%)",
+        }}
+        aria-hidden="true"
+      />
       <div className="stage-glow-highlight" aria-hidden="true" />
     </div>
   );
