@@ -5,6 +5,18 @@ import { navLinks, siteConfig } from "@/data/portfolio";
 import { cn } from "@/lib/utils";
 import { basePath } from "@/lib/base-path";
 
+const projectLinks = [
+  { label: "TCGC Student Master", href: "/#tcgc-student-master" },
+  { label: "Jazon Collective Market", href: "/#jazon-collective-market" },
+  { label: "BlazingHeart", href: "/#blazingheart" },
+] as const;
+
+const capabilityLinks = [
+  { label: "Frontend Development", href: "/#frontend-development", spotlightMod: "MOD-01" },
+  { label: "Mobile Development", href: "/#mobile-development", spotlightMod: "MOD-04" },
+  { label: "Game Development", href: "/#game-development", spotlightMod: "MOD-05" },
+] as const;
+
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("portfolio-hub");
@@ -100,10 +112,116 @@ export default function Navigation() {
           {siteConfig.name}
         </a>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        {/* ── Single shared primary nav list ─────────────────────
+            Desktop (md+): inline horizontal flex inside <nav>.
+            Mobile (<md): hidden by default; when mobileOpen, an
+            absolute full-width panel below the header bar.
+            Exactly one #dropdownBtn / #dropdownMenu exists here. */}
+        <ul
+          id="mobile-navigation"
+          className={cn(
+            "gap-1",
+            mobileOpen
+              ? "flex flex-col absolute left-0 right-0 top-full border-t border-border-subtle bg-bg-primary/95 backdrop-blur-md px-6 py-4 z-50"
+              : "hidden",
+            "md:flex md:flex-row md:relative md:inset-auto md:items-center md:gap-1 md:border-t-0 md:bg-transparent md:backdrop-blur-none md:px-0 md:py-0 md:z-auto"
+          )}
+        >
           {navLinks.map((link) => {
             const sectionId = link.href.replace("/#", "");
             const isActive = activeSection === sectionId;
+
+            if (link.label === "Projects") {
+              return (
+                <li key={link.href} className="dropdown">
+                  <button
+                    id="dropdownBtn"
+                    type="button"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    className={cn(
+                      "relative flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                      isActive
+                        ? "text-accent-blue"
+                        : "text-text-secondary hover:text-text-primary"
+                    )}
+                  >
+                    Projects
+                    <span
+                      id="dropdownArrow"
+                      className="text-[10px] leading-none"
+                      aria-hidden="true"
+                    >
+                      &#9660;
+                    </span>
+                  </button>
+                  <ul id="dropdownMenu" className="dropdown-menu" role="menu">
+                    {projectLinks.map((project) => (
+                      <li key={project.href} role="none">
+                        <a
+                          href={basePath(project.href)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            navigateTo(project.href);
+                          }}
+                          role="menuitem"
+                          className="block rounded-md px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-surface-elevated hover:text-text-primary transition-colors"
+                        >
+                          {project.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              );
+            }
+
+            if (link.label === "Capabilities") {
+              return (
+                <li key={link.href} className="dropdown">
+                  <button
+                    id="capabilitiesDropdownBtn"
+                    type="button"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    className={cn(
+                      "relative flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                      isActive
+                        ? "text-accent-blue"
+                        : "text-text-secondary hover:text-text-primary"
+                    )}
+                  >
+                    Capabilities
+                    <span
+                      id="capabilitiesDropdownArrow"
+                      className="text-[10px] leading-none"
+                      aria-hidden="true"
+                    >
+                      &#9660;
+                    </span>
+                  </button>
+                  <ul id="capabilitiesDropdownMenu" className="dropdown-menu" role="menu">
+                    {capabilityLinks.map((cap) => (
+                      <li key={cap.href} role="none">
+                        <a
+                          href={basePath(cap.href)}
+                          data-spotlight-mod={cap.spotlightMod}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setActiveSection("capabilities");
+                            setMobileOpen(false);
+                          }}
+                          role="menuitem"
+                          className="block rounded-md px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-surface-elevated hover:text-text-primary transition-colors"
+                        >
+                          {cap.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              );
+            }
 
             return (
               <li key={link.href}>
@@ -164,38 +282,6 @@ export default function Navigation() {
           </svg>
         </button>
       </nav>
-
-      {mobileOpen && (
-        <div
-          id="mobile-navigation"
-          className="border-t border-border-subtle bg-bg-primary/95 backdrop-blur-md md:hidden"
-        >
-          <ul className="flex flex-col gap-1 px-6 py-4">
-            {navLinks.map((link) => {
-              const sectionId = link.href.replace("/#", "");
-              const isActive = activeSection === sectionId;
-
-              return (
-                <li key={link.href}>
-                  <a
-                    href={basePath(link.href)}
-                    onClick={(e) => { e.preventDefault(); navigateTo(link.href); }}
-                    aria-current={isActive ? "location" : undefined}
-                    className={cn(
-                      "block rounded-md px-4 py-3 text-sm font-medium transition-colors",
-                      isActive
-                        ? "bg-accent-blue/10 text-accent-blue"
-                        : "text-text-secondary hover:bg-bg-surface hover:text-text-primary"
-                    )}
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
     </header>
   );
 }

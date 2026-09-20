@@ -621,6 +621,30 @@ html.js-ready .reveal-stagger[data-reveal-init][data-revealed] > *:nth-child(6) 
   }
 }
 
+/* ── Dropdown menu ───────────────────────────────────────────── */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  z-index: 50;
+  margin-top: 0.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  padding: 0.25rem 0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
 /* ── Typography scale ───────────────────────────────────────── */
 .ty-hero {
   font-size: clamp(1.625rem, 0.4vw + 1.4rem, 2.5rem);
@@ -698,4 +722,90 @@ html.js-ready .reveal-stagger[data-reveal-init][data-revealed] > *:nth-child(6) 
 .ty-action:focus-visible {
   outline: 2px solid var(--accent-blue);
   outline-offset: 2px;
+}
+
+/* ── Capability Spotlight ───────────────────────────────────── */
+.spotlight-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.spotlight-overlay.open {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.spotlight-panel {
+  position: relative;
+  max-width: 28rem;
+  width: calc(100% - 2rem);
+  max-height: calc(100dvh - 4rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+  padding: 1.5rem;
+  box-shadow:
+    0 0 0 1px rgba(94, 141, 255, 0.08),
+    0 25px 60px -12px rgba(0, 0, 0, 0.55);
+}
+
+.spotlight-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.spotlight-close:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-accent);
+}
+
+.spotlight-close:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.spotlight-content .skill-module {
+  border-color: transparent;
+  background: transparent;
+  padding: 0;
+}
+
+.spotlight-content .skill-module::before {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-overlay {
+    transition: none;
+  }
 }

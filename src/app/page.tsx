@@ -201,7 +201,7 @@ export default function Home() {
           <div className="space-y-8">
             {featuredProjects.map((project, index) => (
               <Reveal key={project.id} variant="bracket-expand" delay={index * 100}>
-                <div className="group/project grid grid-cols-1 gap-6 rounded-lg border border-border-subtle bg-bg-surface p-5 transition-all duration-300 hover:border-border-accent hover:bg-bg-surface-elevated sm:p-6 lg:grid-cols-12">
+                <div id={project.id} className="group/project grid grid-cols-1 gap-6 rounded-lg border border-border-subtle bg-bg-surface p-5 transition-all duration-300 hover:border-border-accent hover:bg-bg-surface-elevated sm:p-6 lg:grid-cols-12">
                   {/* Artwork — alternate sides: 01 left, 02 right, 03 left */}
                   <div className={`lg:col-span-7 ${index % 2 === 1 ? "lg:order-2" : ""}`}>
                     <ProjectArtwork projectId={project.id} className="aspect-[4/3]" />
@@ -248,6 +248,18 @@ export default function Home() {
             {skillGroups.map((group) => (
               <div
                 key={group.category}
+                id={
+                  group.category === "Frontend Development"
+                    ? "frontend-development"
+                    : group.category === "Mobile Development"
+                      ? "mobile-development"
+                      : group.category === "Game Development"
+                        ? "game-development"
+                        : undefined
+                }
+                data-spotlight-mod={group.moduleIndex}
+                role="button"
+                tabIndex={0}
                 className="skill-module group rounded-lg border border-border-subtle bg-bg-primary px-5 py-4 transition-colors hover:border-border-accent"
               >
                 <div className="flex items-center justify-between">
@@ -279,6 +291,28 @@ export default function Home() {
           </div>
         </Reveal>
       </section>
+
+      {/* ── Capability Spotlight (single reusable overlay) ── */}
+      <div
+        id="spotlightOverlay"
+        className="spotlight-overlay"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Module spotlight"
+      >
+        <div id="spotlightPanel" className="spotlight-panel">
+          <button
+            id="spotlightClose"
+            type="button"
+            className="spotlight-close"
+            aria-label="Close spotlight"
+          >
+            &#10005;
+          </button>
+          <div id="spotlightContent" className="spotlight-content" />
+        </div>
+      </div>
 
       {/* ── SystemThread connector ── */}
       <SystemThread />
