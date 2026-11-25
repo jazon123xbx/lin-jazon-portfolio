@@ -48,3 +48,5 @@ next-env.d.ts
 /public/images/projects/tcgc-student-master/
 
 /TEACHER_EXPLANATION.md
+
+/opencode.jsonc
