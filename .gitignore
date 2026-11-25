@@ -46,3 +46,5 @@ next-env.d.ts
 
 # legacy raw capture set, superseded by public/images/projects/approved-assets-20261124
 /public/images/projects/tcgc-student-master/
+
+/TEACHER_EXPLANATION.md
