@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import LaptopScene from "./LaptopScene";
+import type { GlassQuad } from "@/lib/display-projection";
 
 interface LaptopCanvasProps {
   onReady?: () => void;
@@ -11,6 +12,8 @@ interface LaptopCanvasProps {
   reducedMotion?: boolean;
   onOpened?: () => void;
   cameraPush?: boolean;
+  /** Stable geometry reporting callback; see LaptopPrototype's contract. */
+  onGlassQuad?: (quad: GlassQuad | null) => void;
 }
 
 function LifecycleObserver({ onReady, onFailure }: Pick<LaptopCanvasProps, "onReady" | "onFailure">) {
@@ -36,18 +39,18 @@ function LifecycleObserver({ onReady, onFailure }: Pick<LaptopCanvasProps, "onRe
   return null;
 }
 
-export default function LaptopCanvas({ onReady, onFailure, openRequested, reducedMotion, onOpened, cameraPush }: LaptopCanvasProps) {
+export default function LaptopCanvas({ onReady, onFailure, openRequested, reducedMotion, onOpened, cameraPush, onGlassQuad }: LaptopCanvasProps) {
   return (
     <Canvas
       frameloop="demand"
       dpr={[1, 1.5]}
-      camera={{ fov: 32, position: [0, 0.55, 7.2], near: 0.1, far: 100 }}
+      camera={{ fov: 32, position: [0, 1.15, 7.2], near: 0.1, far: 100 }}
       gl={{ antialias: true, alpha: true }}
       onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       style={{ width: "100%", height: "100%" }}
     >
       <LifecycleObserver onReady={onReady} onFailure={onFailure} />
-      <LaptopScene openRequested={openRequested} reducedMotion={reducedMotion} onOpened={onOpened} cameraPush={cameraPush} />
+      <LaptopScene openRequested={openRequested} reducedMotion={reducedMotion} onOpened={onOpened} cameraPush={cameraPush} onGlassQuad={onGlassQuad} />
     </Canvas>
   );
 }

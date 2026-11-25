@@ -1,175 +1,198 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import type { ProjectMedia } from "@/data/portfolio";
+import { basePath } from "@/lib/base-path";
 
-/* ── LIN.OS Placeholder ───────────────────────────────────── */
+const focusRing =
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue";
 
-function LinOSPlaceholder() {
-  return (
-    <div className="flex aspect-video w-full items-center justify-center rounded-lg border border-border-subtle bg-bg-surface">
-      <div className="text-center">
-        <p className="ty-eyebrow text-accent-blue/60">LIN.OS</p>
-        <p className="mt-1 text-[11px] text-text-muted">No media available</p>
-      </div>
-    </div>
-  );
+function mediaLabel(media: ProjectMedia, index: number): string {
+  return media.label?.trim() || `${media.type === "video" ? "Video" : "Image"} ${index + 1}`;
 }
 
-/* ── Single media ─────────────────────────────────────────── */
+type MediaLoadState = "loading" | "loaded" | "error";
 
-function SingleMedia({ media }: { media: ProjectMedia }) {
-  if (media.type === "video") {
-    return (
-      <div className="overflow-hidden rounded-lg border border-border-subtle">
-        <video
-          src={media.src}
-          controls
-          preload="metadata"
-          className="aspect-video w-full object-cover"
-          aria-label={media.alt}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div className="overflow-hidden rounded-lg border border-border-subtle">
-      <img
-        src={media.src}
-        alt={media.alt}
-        loading="lazy"
-        className="aspect-video w-full object-cover"
-      />
-    </div>
-  );
-}
-
-/* ── Multiple media gallery ───────────────────────────────── */
-
-function MultipleMedia({ media }: { media: ProjectMedia[] }) {
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const goTo = useCallback(
-    (index: number) => {
-      setActiveIndex(index);
-    },
-    []
-  );
-
-  const goPrev = useCallback(() => {
-    setActiveIndex((prev) => (prev === 0 ? media.length - 1 : prev - 1));
-  }, [media.length]);
-
-  const goNext = useCallback(() => {
-    setActiveIndex((prev) => (prev === media.length - 1 ? 0 : prev + 1));
-  }, [media.length]);
+function SelectedMedia({ media, state, onStateChange }: {
+  media: ProjectMedia;
+  state: MediaLoadState;
+  onStateChange: (state: MediaLoadState) => void;
+}) {
+  const stageRef = useRef<HTMLDivElement>(null);
+  const assetRef = useRef<HTMLImageElement | HTMLVideoElement | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const geometry: CSSProperties | undefined = media.width && media.height
+    ? {
+        width: `min(100%, ${media.width}px, calc(var(--gallery-height) * ${media.width / media.height}))`,
+        aspectRatio: `${media.width} / ${media.height}`,
+      }
+    : undefined;
 
   return (
-    <div className="space-y-3">
-      {/* Main display */}
-      <div className="relative overflow-hidden rounded-lg border border-border-subtle">
-        {media[activeIndex].type === "video" ? (
+    <div className="flex min-w-0 justify-center [--gallery-height:min(520px,62dvh)] [@media(max-height:480px)_and_(orientation:landscape)]:[--gallery-height:320px]">
+      <div ref={stageRef} tabIndex={-1} role="group" aria-label="Selected gallery media" style={geometry} className={`relative max-w-full overflow-hidden rounded-lg border border-border-subtle bg-bg-primary ${focusRing} ${!geometry && state !== "loaded" ? "min-h-32 min-w-40" : ""}`}>
+        {media.type === "video" ? (
           <video
-            src={media[activeIndex].src}
+            key={attempt}
+            ref={(asset) => { assetRef.current = asset; }}
+            src={basePath(media.src)}
+            width={media.width}
+            height={media.height}
             controls
             preload="metadata"
-            className="aspect-video w-full object-cover"
-            aria-label={media[activeIndex].alt}
+            aria-label={media.alt}
+            onLoadedMetadata={(event) => {
+              if (event.currentTarget === assetRef.current) onStateChange("loaded");
+            }}
+            onError={(event) => {
+              if (event.currentTarget === assetRef.current) onStateChange("error");
+            }}
+            className={`block h-auto max-h-[var(--gallery-height)] max-w-full object-contain ${geometry ? "w-full" : "w-auto"}`}
           />
         ) : (
           <img
-            src={media[activeIndex].src}
-            alt={media[activeIndex].alt}
+            key={attempt}
+            ref={(asset) => { assetRef.current = asset; }}
+            src={basePath(media.src)}
+            alt={media.alt}
+            width={media.width}
+            height={media.height}
             loading="lazy"
-            className="aspect-video w-full object-cover"
+            decoding="async"
+            onLoad={(event) => {
+              if (event.currentTarget === assetRef.current) onStateChange("loaded");
+            }}
+            onError={(event) => {
+              if (event.currentTarget === assetRef.current) onStateChange("error");
+            }}
+            className={`block h-auto max-h-[var(--gallery-height)] max-w-full object-contain ${geometry ? "w-full" : "w-auto"} ${state === "error" ? "invisible" : ""}`}
           />
         )}
-
-        {/* Manual arrows */}
-        {media.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={goPrev}
-              className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue"
-              aria-label="Previous media"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              onClick={goNext}
-              className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue"
-              aria-label="Next media"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </>
+        {state === "loading" && (
+          <span className="pointer-events-none absolute left-2 top-2 rounded bg-bg-surface px-2 py-1 text-xs text-text-secondary">Loading…</span>
         )}
-
-        {/* Index counter */}
-        <span className="absolute bottom-3 right-3 rounded bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white/80">
-          {activeIndex + 1}/{media.length}
-        </span>
-      </div>
-
-      {/* Thumbnails */}
-      {media.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {media.map((item, index) => (
+        {state === "error" && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-bg-primary p-2 text-center text-xs text-text-secondary">
+            <p>Unable to load this media.</p>
             <button
-              key={item.src}
               type="button"
-              onClick={() => goTo(index)}
-              className={`shrink-0 overflow-hidden rounded border-2 transition-colors ${
-                index === activeIndex
-                  ? "border-accent-blue"
-                  : "border-border-subtle hover:border-border-accent"
-              }`}
-              aria-label={`View media ${index + 1}`}
-              aria-current={index === activeIndex ? "true" : undefined}
-            >
-              {item.type === "video" ? (
-                <div className="flex h-12 w-16 items-center justify-center bg-bg-surface">
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 text-text-muted">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>
-              ) : (
-                <img
-                  src={item.src}
-                  alt=""
-                  loading="lazy"
-                  className="h-12 w-16 object-cover"
-                />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
+              onClick={() => {
+                // Transfer focus before Retry unmounts; never scroll the panel/page.
+                stageRef.current?.focus({ preventScroll: true });
+                onStateChange("loading");
+                setAttempt((current) => current + 1);
+              }}
+              className={`min-h-11 min-w-11 rounded-md border border-border-subtle px-3 ${focusRing}`}
+            >Retry</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-/* ── Exported component ────────────────────────────────────── */
+function ScreenshotGallery({ media }: { media: readonly ProjectMedia[] }) {
+  const [selection, setSelection] = useState<{ index: number; state: MediaLoadState }>({ index: 0, state: "loading" });
+  const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const selectedIndex = Math.min(selection.index, media.length - 1);
+  const selected = media[selectedIndex];
+
+  function selectIndex(index: number) {
+    setSelection((current) => current.index === index ? current : { index, state: "loading" });
+  }
+
+  function move(direction: number) {
+    selectIndex((selectedIndex + direction + media.length) % media.length);
+  }
+
+  // Scroll only the owning panel, never the page or the selected image.
+  function revealKeyboardFocus(button: HTMLButtonElement) {
+    if (!button.matches(":focus-visible")) return;
+    const panel = button.closest<HTMLElement>("[data-project-dialog-panel]");
+    if (!panel) return;
+    const bounds = panel.getBoundingClientRect();
+    const header = panel.querySelector<HTMLElement>("[data-project-dialog-header]");
+    const top = Math.max(bounds.top + 112, (header?.getBoundingClientRect().bottom ?? bounds.top) + 8);
+    const target = button.getBoundingClientRect();
+    if (target.top < top) panel.scrollTop += target.top - top;
+    else if (target.bottom > bounds.bottom - 8) panel.scrollTop += target.bottom - bounds.bottom + 8;
+  }
+
+  return (
+    <section aria-label="Project Gallery" className="min-w-0 space-y-3">
+      <h4 className="ty-sub text-text-primary">Project Gallery</h4>
+      <SelectedMedia key={selected.src} media={selected} state={selection.state}
+        onStateChange={(state) => setSelection((current) =>
+          current.index === selectedIndex && current.state !== state ? { ...current, state } : current
+        )} />
+
+      <div className="flex min-w-0 flex-wrap items-center gap-2">
+        {media.length > 1 && (
+          <button type="button" onClick={() => move(-1)} aria-label="Previous media"
+            className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border-subtle text-text-primary hover:border-border-accent ${focusRing}`}>
+            <span aria-hidden="true">&#8249;</span>
+          </button>
+        )}
+        <p role="status" aria-live="polite" aria-atomic="true" className="min-w-0 flex-1 break-words text-center text-xs text-text-secondary">
+          {selectedIndex + 1} / {media.length} — {mediaLabel(selected, selectedIndex)}
+          {selection.state === "loading" ? " — Loading…" : selection.state === "error" ? " — Unavailable. Retry to load this media." : " — Ready."}
+        </p>
+        {media.length > 1 && (
+          <button type="button" onClick={() => move(1)} aria-label="Next media"
+            className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border-subtle text-text-primary hover:border-border-accent ${focusRing}`}>
+            <span aria-hidden="true">&#8250;</span>
+          </button>
+        )}
+      </div>
+
+      <div role="group" aria-label="Choose gallery media" className="grid grid-cols-4 gap-2 sm:grid-cols-5">
+        {media.map((item, index) => {
+          const isSelected = index === selectedIndex;
+          return (
+            <button
+              key={item.src}
+              type="button"
+              ref={(button) => { thumbnailRefs.current[index] = button; }}
+              onClick={() => selectIndex(index)}
+              onFocus={(event) => revealKeyboardFocus(event.currentTarget)}
+              onKeyDown={(event) => {
+                let nextIndex: number;
+                switch (event.key) {
+                  case "ArrowLeft": nextIndex = (index - 1 + media.length) % media.length; break;
+                  case "ArrowRight": nextIndex = (index + 1) % media.length; break;
+                  case "Home": nextIndex = 0; break;
+                  case "End": nextIndex = media.length - 1; break;
+                  default: return;
+                }
+                event.preventDefault();
+                selectIndex(nextIndex);
+                thumbnailRefs.current[nextIndex]?.focus({ preventScroll: true });
+              }}
+              aria-label={`View ${index + 1}: ${mediaLabel(item, index)}`}
+              aria-current={isSelected ? "true" : undefined}
+              className={`relative flex h-14 min-w-11 scroll-mt-28 items-center justify-center rounded-md border-2 p-1 ${focusRing} ${isSelected ? "border-accent-blue" : "border-border-subtle hover:border-border-accent"}`}
+            >
+              {item.type === "video" ? (
+                <span aria-hidden="true" className="text-text-secondary">&#9654;</span>
+              ) : (
+                <img src={basePath(item.src)} alt="" width={item.width} height={item.height}
+                  loading="lazy" decoding="async" className="block h-auto max-h-11 max-w-full object-contain" />
+              )}
+              <span aria-hidden="true" className="absolute bottom-0 left-0 rounded bg-bg-surface px-1 text-[10px] text-text-primary">{index + 1}</span>
+              {isSelected && <span aria-hidden="true" className="absolute right-0 top-0 rounded bg-bg-surface px-1 text-xs text-accent-blue">✓</span>}
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
 
 interface ProjectMediaGalleryProps {
-  media: ProjectMedia[];
+  media: readonly ProjectMedia[];
 }
 
 export default function ProjectMediaGallery({ media }: ProjectMediaGalleryProps) {
-  if (media.length === 0) {
-    return <LinOSPlaceholder />;
-  }
-
-  if (media.length === 1) {
-    return <SingleMedia media={media[0]} />;
-  }
-
-  return <MultipleMedia media={media} />;
+  if (media.length === 0) return null;
+  return <ScreenshotGallery media={media} />;
 }

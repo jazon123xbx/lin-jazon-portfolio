@@ -66,7 +66,9 @@ export default function ProfilePortrait({ src, alt }: ProfilePortraitProps) {
         <img
           src={basePath(src)}
           alt={alt}
-          className="h-full w-full object-cover object-top"
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-contain object-center"
         />
         {/* Technical frame decorations */}
         <div className="portrait-frame absolute inset-0" aria-hidden="true" />
@@ -95,7 +97,7 @@ export default function ProfilePortrait({ src, alt }: ProfilePortraitProps) {
                 src={basePath(src)}
                 alt={alt}
                 onClick={(e) => e.stopPropagation()}
-                className="max-h-[80vh] max-w-full rounded-xl object-contain border border-[#3c3c44] ring-1 ring-accent-blue/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+                className="max-h-[80vh] max-w-full rounded-xl object-contain object-center border border-[#3c3c44] ring-1 ring-accent-blue/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
               />
               <button
                 ref={closeButtonRef}

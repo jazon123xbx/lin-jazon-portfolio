@@ -1,9 +1,5 @@
 ﻿import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import { basePath } from "@/lib/base-path";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,10 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg-primary text-text-primary">
-        <Navigation />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <Script src={basePath("/dropdown.js")} strategy="afterInteractive" />
+        {children}
       </body>
     </html>
   );

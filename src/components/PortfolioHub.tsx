@@ -1,7 +1,8 @@
 import HubExperience from "./HubExperience";
 import StagePointerGlow from "./StagePointerGlow";
+import type { EntryPresentation } from "./HomeEntryShell";
 
-export default function PortfolioHub() {
+export default function PortfolioHub({ entry }: { entry: EntryPresentation }) {
   return (
     <section
       id="portfolio-hub"
@@ -39,15 +40,15 @@ export default function PortfolioHub() {
         </div>
 
         {/* Responsive Stage — wide product stage with floor glow */}
-        <div className="relative mx-auto w-full max-w-xs sm:max-w-xl lg:max-w-4xl xl:max-w-5xl">
+        <div className="entry-stage relative mx-auto w-full max-w-xs sm:max-w-xl lg:max-w-4xl xl:max-w-5xl">
           {/* Floor underglow — restrained blue reflection */}
           <div className="pointer-events-none absolute -bottom-4 left-1/2 h-8 w-[70%] -translate-x-1/2 rounded-full bg-accent-blue/[0.06] blur-xl" aria-hidden="true" />
           {/* Gold calibration mark */}
           <div className="pointer-events-none absolute -left-3 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-accent-gold/40" aria-hidden="true" />
           <div className="pointer-events-none absolute -right-3 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-accent-gold/40" aria-hidden="true" />
 
-          <StagePointerGlow className="aspect-[3/2] sm:aspect-[16/10]">
-            <HubExperience />
+          <StagePointerGlow className="entry-stage-surface aspect-[3/2] sm:aspect-[16/10]">
+            <HubExperience entry={entry} />
           </StagePointerGlow>
         </div>
 

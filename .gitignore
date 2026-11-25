@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local tooling artifacts (not part of the submission)
+/.opencode/
+/.playwright-cli/
+
+# legacy raw capture set, superseded by public/images/projects/approved-assets-20261124
+/public/images/projects/tcgc-student-master/

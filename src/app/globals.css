@@ -53,6 +53,416 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
+/* Keep document scrolling available even while entrance controls are locked.
+   A width-led reading stage may be taller than a short/zoomed viewport. */
+html:has(.home-entry[data-entry-locked="true"]),
+body:has(.home-entry[data-entry-locked="true"]) {
+  overflow-y: auto;
+  overscroll-behavior: auto;
+}
+.home-entry {
+  min-width: 0;
+  min-height: 100svh;
+  height: auto;
+}
+.home-entry [hidden] { display: none !important; }
+.entry-chrome:not([hidden]) { display: contents; }
+/* Stage 2 continuity correction — keep the unlocked Navigation header out of
+   normal flow. In flow, its 64px bar + 1px border enters the document at the
+   ui-reveal -> interactive handoff and pushes the 100svh hub down 65px AFTER
+   the camera push settled, shifting the hero title, stage, canvas, projected
+   display and every registered corner +65px (measured 1440x900: stage docY
+   181.09 -> 246.09). Fixed positioning retains the visible, always-on-top bar
+   without adding flow height; dropdown menus stay anchored to their relative
+   `li.dropdown` and the mobile panel to this positioned header, and hidden/
+   inert ownership before unlock is untouched. */
+.home-entry .entry-chrome > header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+/* Stage 2 continuity repair — header safe area. The fixed bar overlays the top
+   of the 100svh hub; its height is the nav's Tailwind h-16 (64px) plus the 1px
+   bottom border = 65px. No header-height token exists, so this padding is
+   coupled to those values. Reserving the band on #portfolio-hub identically in
+   the locked and unlocked states keeps the locked->interactive displacement at
+   zero (both states share one layout) while lifting the hero, stage, glass and
+   CTA below the bar. Landscape phones still fit; the narrowest phones compact
+   below. Section pages and hash targets are untouched (scoped to .home-entry). */
+.home-entry #portfolio-hub {
+  box-sizing: border-box;
+  padding-top: 65px;
+}
+@media (max-width: 599px) {
+  .home-entry .entry-stage-surface { min-height: 300px; }
+  .home-entry #portfolio-hub-title { font-size: 22px; }
+}
+/* Immersive stage sizing belongs to the home-entry presentation itself, not only
+   to the pre-unlock lock flag. Scoping it to the locked attribute made the stage
+   and panel bounds change when the ui-reveal -> interactive handoff cleared the
+   lock, so the shared frame reflowed at unlock. */
+.home-entry #portfolio-hub {
+  min-width: 0;
+  min-height: 100svh;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.home-entry #portfolio-hub > .max-w-6xl {
+  width: 100%;
+  min-width: 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.home-entry .entry-stage {
+  min-width: 0;
+}
+/* Compact home stages fill the existing gutters instead of the max-w-xs cap.
+   Surface aspect/min-height and the short-height composition stay independent. */
+@media (max-width: 639px) {
+  .home-entry .entry-stage {
+    width: 100%;
+    max-width: 100%;
+    min-inline-size: 0;
+  }
+}
+/* Desktop/tablet reserves its canvas from width, never viewport height.
+   Higher specificity beats responsive utility caps without changing non-home use. */
+@media (min-width: 640px) {
+  .home-entry .entry-stage {
+    width: 100%;
+    max-width: 64rem;
+  }
+  .home-entry .entry-stage-surface {
+    min-width: 0;
+    max-width: 100%;
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+}
+.entry-noscript {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: var(--bg-surface);
+  text-align: center;
+  z-index: 40;
+}
+
+/* Shared screen dimensions keep the OS hierarchy steady in either renderer. */
+.hub-presentation {
+  --hub-screen-width: 90%;
+  --hub-screen-height: 248px;
+  --hub-screen-top: 15%;
+}
+.entry-stage-surface { width: 100%; min-height: 390px; }
+.hub-display-anchor {
+  position: absolute;
+  z-index: 30;
+  left: 50%;
+  top: var(--hub-screen-top);
+  width: var(--hub-screen-width);
+  transform: translateX(-50%);
+}
+.hub-display-surface {
+  width: 100%;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.hub-screen-panel {
+  position: relative;
+  width: 100%;
+  height: var(--hub-screen-height);
+  border: 1px solid #48515f;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #101925, #080e17);
+  box-shadow: 0 0 0 3px #11151c, 0 8px 24px #00000040;
+}
+/* Projected mode uses the actual 3D glass as its frame: no floating-card bezel. */
+.hub-display-anchor[data-mode="projected"] {
+  left: 0;
+  top: 0;
+  transform: none;
+  width: var(--linos-projected-width);
+}
+.hub-display-anchor[data-mode="projected"] .hub-display-surface,
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel {
+  position: relative;
+  height: var(--linos-projected-height);
+}
+/* Ghost-popup correction: once a candidate is qualified (coherent source,
+   confident projection, readable diagnostic phase) but is still waiting on the
+   existing 180ms entry hysteresis, hide the flat bezel so no detached card
+   paints before promotion. JS adds this attribute only in noninteractive
+   diagnostic phases with no focused display, and clears it synchronously on
+   promotion, rejection, cancellation, fallback, focus and unmount. Scoped to
+   flat mode: probeProjection holds projected mode synchronously inside one
+   task to measure readability, and an unscoped hidden value here would be
+   inherited by the surface, filtering every text/link/body and voiding the
+   promotion probe's metrics. Any paint between tasks still finds the flat,
+   pending anchor suppressed. */
+.hub-display-anchor[data-mode="flat"][data-projection-pending] {
+  visibility: hidden;
+  pointer-events: none;
+}
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+/* Restrained power-on illumination: a soft interior glow on the glass itself,
+   driven by the existing phase attribute and a CSS transition only. No new
+   timeline, RAF, bloom, or extra node; the physical bezel still owns the edge. */
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 70% 62% at 50% 42%, rgba(94, 141, 255, 0.11), rgba(94, 141, 255, 0) 72%);
+  opacity: 0;
+  transition: opacity 500ms ease-out;
+}
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel[data-phase="booting"]::before,
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel[data-phase="system-check"]::before,
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel[data-phase="access-granted"]::before,
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel[data-phase="welcome-hold"]::before,
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel[data-phase="camera-push"]::before,
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel[data-phase="ui-reveal"]::before,
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel[data-phase="interactive"]::before {
+  opacity: 1;
+}
+/* Projected dashboard reads as light on glass, not a floating card. */
+.hub-display-anchor[data-mode="projected"] .hub-screen-header {
+  height: 32px;
+  padding: 0 20px;
+  font-size: 16px;
+  line-height: 20px;
+  border-bottom-color: rgba(94, 141, 255, 0.18);
+  color: #9fb4d0;
+}
+.hub-display-anchor[data-mode="projected"] .hub-row-status { color: #cfe0fb; }
+.hub-display-anchor[data-mode="projected"] .hub-content-body h3 {
+  font-size: 20px;
+  line-height: 24px;
+  color: #f4f7fc;
+  text-shadow: 0 0 12px rgba(94, 141, 255, 0.18);
+}
+.hub-display-anchor[data-mode="projected"] .hub-content-body p {
+  color: rgba(219, 230, 245, 0.82);
+}
+.hub-display-anchor[data-mode="projected"] .hub-dash-tile {
+  width: 100%;
+  height: 68px;
+  min-height: 68px;
+  font-size: 20px;
+  line-height: 24px;
+  --tw-backdrop-blur: ;
+  backdrop-filter: blur(0px) !important;
+  -webkit-backdrop-filter: blur(0px) !important;
+  background: rgba(16, 27, 40, 0.72);
+  border-color: rgba(120, 160, 220, 0.28);
+  color: #e8f0fb;
+}
+.hub-display-anchor[data-mode="projected"] .hub-dash-tile:hover {
+  background: rgba(30, 48, 72, 0.9);
+  border-color: rgba(94, 141, 255, 0.5);
+}
+.hub-display-anchor[data-mode="projected"] .hub-dash-tile:focus-visible {
+  outline: 3px solid var(--accent-blue);
+  outline-offset: 3px;
+  border-color: var(--accent-blue);
+}
+/* Fixed logical layout only inside the unchanged 448x269 projected source.
+   Specificity keeps flat/mobile/short-height rules from altering this geometry. */
+.hub-display-anchor[data-mode="projected"] .hub-screen-body {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  width: 100%;
+  height: 237px;
+  padding: 12px 20px;
+}
+.hub-display-anchor[data-mode="projected"] .hub-boot-body {
+  font-size: 20px;
+  line-height: 24px;
+}
+.hub-display-anchor[data-mode="projected"] .hub-screen-title {
+  font-size: 20px;
+  line-height: 24px;
+  margin-bottom: 8px;
+}
+.hub-display-anchor[data-mode="projected"] .hub-screen-rows {
+  --hub-row-pitch: 24px;
+  height: 168px;
+}
+.hub-display-anchor[data-mode="projected"] [data-phase="system-check"] .hub-screen-rows {
+  height: 120px;
+}
+.hub-display-anchor[data-mode="projected"] .hub-screen-row {
+  height: 24px;
+  grid-template-columns: 14px minmax(0, 1fr) 5ch;
+  column-gap: 8px;
+}
+.hub-display-anchor[data-mode="projected"] .hub-screen-cursor { left: 22px; }
+.hub-display-anchor[data-mode="projected"] .hub-screen-message {
+  height: 100%;
+  min-height: 0;
+}
+.hub-display-anchor[data-mode="projected"] .hub-screen-message .hub-screen-title {
+  font-size: 24px;
+  line-height: 30px;
+  margin: 0;
+}
+.hub-display-anchor[data-mode="projected"] .hub-content-body {
+  display: none;
+  padding: 12px 26px;
+}
+.hub-display-anchor[data-mode="projected"] :is([data-phase="ui-reveal"], [data-phase="interactive"]) .hub-boot-body {
+  display: none;
+}
+.hub-display-anchor[data-mode="projected"] :is([data-phase="ui-reveal"], [data-phase="interactive"]) .hub-content-body:not([aria-hidden="true"]) {
+  display: block;
+}
+.hub-display-anchor[data-mode="projected"] .hub-content-body .hub-projected-redundant {
+  display: none;
+}
+.hub-display-anchor[data-mode="projected"] .hub-content-body .hub-projected-subtitle {
+  display: block;
+  margin-top: 2px;
+  font-size: 16px;
+  line-height: 20px;
+}
+.hub-display-anchor[data-mode="projected"] .hub-content-body nav {
+  position: absolute;
+  top: 62px;
+  left: 26px;
+  right: 26px;
+  margin: 0;
+}
+.hub-display-anchor[data-mode="projected"] .hub-content-body nav ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+/* Paint navigation during reveal, while React keeps it inert/unfocusable.
+   Identical interactive values avoid restarting the reveal at that boundary. */
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel:is([data-phase="ui-reveal"], [data-phase="interactive"]) :is(nav, nav li) {
+  opacity: 1;
+  translate: 0 0;
+  transform: none;
+}
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel:is([data-phase="ui-reveal"], [data-phase="interactive"]) nav {
+  transition-duration: 200ms;
+  transition-delay: 0ms;
+}
+.hub-display-anchor[data-mode="projected"] .hub-screen-panel:is([data-phase="ui-reveal"], [data-phase="interactive"]) nav li {
+  /* The container reveals all tiles together; inline stagger delays have no
+     effect without transitioned properties, so no !important is needed. */
+  transition-property: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-display-anchor[data-mode="projected"] .hub-screen-panel:is([data-phase="ui-reveal"], [data-phase="interactive"]) nav {
+    transition-property: none;
+  }
+}
+.hub-display-anchor[data-mode="projected"] .hub-dash-bracket {
+  font-size: inherit;
+}
+.hub-screen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+  padding: 0 14px;
+  border-bottom: 1px solid #ffffff16;
+  color: #acbace;
+  font: 500 11px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.08em;
+}
+.hub-screen-header span:first-child { color: #d5e3f8; }
+.hub-screen-body { padding: 12px 14px; }
+.hub-boot-body { font: 400 11px/20px var(--font-geist-mono), monospace; }
+.hub-screen-title {
+  margin-bottom: 8px;
+  color: #afc9ef;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.08em;
+}
+.hub-screen-rows { position: relative; height: 140px; }
+.hub-screen-row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) 5ch;
+  column-gap: 6px;
+  height: 20px;
+  color: #c3cbd8;
+  white-space: nowrap;
+}
+.hub-row-marker { color: #6f92c6; }
+.hub-row-status { color: #b4d5fa; text-align: right; font-weight: 600; }
+.hub-screen-cursor { position: absolute; left: 16px; color: #afc9ef; }
+.hub-screen-message {
+  display: grid;
+  min-height: 180px;
+  place-items: center;
+  text-align: center;
+}
+.hub-screen-message .hub-screen-title { font-size: 14px; margin: 0; }
+.hub-content-body h3 { font-size: 14px; line-height: 20px; }
+.hub-content-body p { font-size: 11px; }
+.hub-content-body nav { margin-top: 10px; }
+.hub-content-body a { font-size: 12px; }
+.hub-fallback {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--hub-screen-top) - 10px);
+  width: calc(var(--hub-screen-width) + 20px);
+  transform: translateX(-50%);
+}
+.hub-fallback-lid { height: calc(var(--hub-screen-height) + 20px); }
+@media (min-width: 640px) {
+  .hub-presentation { --hub-screen-width: 64%; --hub-screen-top: 17%; }
+  .entry-stage-surface { min-height: 400px; }
+}
+@media (min-width: 1024px) {
+  .hub-presentation { --hub-screen-width: 52%; }
+}
+@media (max-height: 600px) and (min-width: 600px) {
+  .home-entry #portfolio-hub > .max-w-6xl { padding: 8px 24px; }
+  .home-entry #portfolio-hub-title { font-size: 24px; line-height: 1.1; }
+  .home-entry #portfolio-hub > .max-w-6xl > .text-center { margin-bottom: 4px; }
+  /* Short-height display/canvas overrides are retained only for non-home use.
+     :where preserves their original specificity and cascade. */
+  .entry-stage-surface:where(:not(.home-entry *)) { min-height: 240px; height: calc(100svh - 9rem); aspect-ratio: auto; }
+  .hub-presentation:where(:not(.home-entry *)) { --hub-screen-width: min(70%, 30rem); --hub-screen-top: 2%; --hub-screen-height: 228px; }
+  .hub-screen-body:where(:not(.home-entry *)) { padding-top: 6px; padding-bottom: 6px; }
+  .hub-screen-message:where(:not(.home-entry *)) { min-height: 174px; }
+}
+/* Preserve the existing compact 600–639px composition, not the desktop stage. */
+@media (max-height: 600px) and (min-width: 600px) and (max-width: 639px) {
+  .home-entry .entry-stage { max-width: 56rem; }
+  .entry-stage-surface:where(.home-entry *) { min-height: 240px; height: calc(100svh - 9rem); aspect-ratio: auto; }
+  .hub-presentation:where(.home-entry *) { --hub-screen-width: min(70%, 30rem); --hub-screen-top: 2%; --hub-screen-height: 228px; }
+  .hub-screen-body:where(.home-entry *) { padding-top: 6px; padding-bottom: 6px; }
+  .hub-screen-message:where(.home-entry *) { min-height: 174px; }
+}
+
+/* Phase 2D.1 corrective — small-viewport panel registration.
+   Keep the shared frame and all boot/check rows readable inside the visible
+   glass without hiding content or changing counts, cadence, or shared structure. */
+@media (max-width: 639px) {
+  .hub-screen-body { padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; }
+}
+
 /* Smooth scroll + anchor offset for sticky navbar */
 html {
   scroll-padding-top: 5rem;

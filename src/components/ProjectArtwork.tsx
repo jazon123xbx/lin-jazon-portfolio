@@ -9,20 +9,23 @@ import { basePath } from "@/lib/base-path";
 interface ProjectArtworkImage {
   src: string;
   alt: string;
+  fit?: "cover" | "contain";
 }
 
 const imageMap: Record<string, ProjectArtworkImage> = {
   "tcgc-student-master": {
-    src: "/projects/tcgc-student-master.png",
-    alt: "TCGC Student Master mobile application dashboard preview",
+    src: "/images/projects/approved-assets-20261124/tcgc-student-master/tcgc-showcase-cover-approved-original.png",
+    alt: "TCGC Student Master promotional phone artwork",
+    fit: "contain",
   },
   "jazon-collective-market": {
     src: "/projects/jazon-collective-market.png",
     alt: "Jazon Collective Market digital marketplace interface preview",
   },
   blazingheart: {
-    src: "/projects/blazing-heart.png",
-    alt: "Blazing Heart Unity fantasy game key art",
+    src: "/images/projects/approved-assets-20261124/blazingheart/blazingheart-showcase-cover.png",
+    alt: "BlazingHeart promotional key art featuring a knight and dragon",
+    fit: "contain",
   },
 };
 
@@ -45,7 +48,7 @@ export default function ProjectArtwork({ projectId, className = "" }: ProjectArt
         fill
         sizes="(max-width: 1024px) 100vw, 58vw"
         style={{
-          objectFit: "cover",
+          objectFit: image.fit ?? "cover",
           objectPosition: "center",
           display: "block",
         }}

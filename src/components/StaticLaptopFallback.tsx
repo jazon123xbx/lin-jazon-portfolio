@@ -5,22 +5,33 @@ interface StaticLaptopFallbackProps {
 }
 
 export default function StaticLaptopFallback({ open = false, hoverReady = false, activating = false }: StaticLaptopFallbackProps) {
+  if (!open) {
+    return (
+      <div aria-hidden="true" className="absolute inset-0 flex items-center justify-center">
+        <div className="relative h-[26%] w-[78%] rounded-xl border border-[#777b85] bg-gradient-to-br from-[#626670] via-[#383c45] to-[#252830] shadow-[0_16px_0_-5px_#1b1e26,0_19px_0_-5px_#777b85,0_24px_35px_#050509]" style={{ transform: "perspective(900px) rotateX(52deg)" }}>
+          <span className="absolute inset-x-3 bottom-1 h-px bg-accent-blue/30" />
+          <span className={`absolute bottom-0 left-1/2 h-0.5 w-3 -translate-x-1/2 bg-accent-blue/60 ${activating ? "animate-pulse" : ""}`} />
+        </div>
+      </div>
+    );
+  }
   return (
     <div
-      className="mx-auto flex w-full max-w-[720px] flex-col items-center"
+      className="hub-fallback flex flex-col items-center"
+      aria-hidden="true"
       style={{ perspective: "900px" }}
     >
       {/* Lid / Screen */}
       {open ? (
         <div
-          className="relative w-[84%] rounded-t-lg border border-[#3a3a44] bg-[#3e3e46] p-[3px]"
+          className="hub-fallback-lid relative w-full rounded-t-xl border border-[#77818e] bg-[#484f5a] p-2"
           style={{
             transformOrigin: "bottom center",
             transform: "rotateX(0deg)",
             backfaceVisibility: "hidden",
           }}
         >
-          <div className="aspect-[16/10] rounded-md bg-bg-primary">
+          <div className="h-full rounded-md border border-[#11151c] bg-[#101b28]">
             <div className="flex h-full items-center justify-center">
               <div className="h-px w-14 rounded-full bg-accent-blue/15" />
             </div>
@@ -36,7 +47,7 @@ export default function StaticLaptopFallback({ open = false, hoverReady = false,
       )}
 
       {/* Hinge */}
-      <div className="relative h-1.5 w-[65%] rounded-b bg-gradient-to-b from-[#2e2e38] to-[#2a2a32]">
+      <div className="relative h-1.5 w-[85%] rounded-b border-x border-[#747c88] bg-gradient-to-b from-[#4b535f] to-[#252a32]">
         {/* Activation pulse on hinge */}
         {activating && (
           <div className="absolute inset-0 rounded-b bg-accent-blue/10 animate-pulse" aria-hidden="true" />
@@ -44,7 +55,7 @@ export default function StaticLaptopFallback({ open = false, hoverReady = false,
       </div>
 
       {/* Base */}
-      <div className="relative w-[90%] rounded-b-lg border border-t-0 border-[#3a3a44] bg-[#3a3a42] px-4 pb-3 pt-2">
+      <div className="relative w-[106%] rounded-b-lg border border-t-0 border-[#69717d] bg-[#3c414a] px-4 pb-3 pt-2 shadow-[0_3px_0_#252a32]">
         {/* Keyboard grouped keys */}
         <div className="mx-auto mb-1.5 flex w-[60%] flex-col gap-1">
           <div className="flex justify-center gap-[2px]">
